@@ -1,4 +1,4 @@
-baseURL = "https://unibo-lptsi-pss.github.io/"
+baseURL = "https://tassiLuca.github.io/code-plagiarism-detector-presentation"
 languageCode = "en-us"
 title = "Code Plagiarism Detector Presentation"
 disableKinds = ["sitemap", "RSS"]
@@ -11,7 +11,7 @@ ignoreFiles = ['.*generator.md$']
 # uglyURLs = true
 
 [author]
-name = "Danilo Pianini"
+name = "Luca Tassinari"
 
 # currently only the unsafe mode for goldmark is supported
 [markup.goldmark.renderer]
