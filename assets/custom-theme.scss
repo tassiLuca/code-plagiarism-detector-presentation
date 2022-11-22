@@ -270,3 +270,19 @@ section.has-light-background {
 	stroke: blue !important;
 	stroke-width: 0.2em !important;
 }
+
+.reveal section.side-by-side h1 {
+	position: absolute;
+}
+
+.reveal section.side-by-side h1:first-of-type {
+	left: 25%;
+}
+
+.reveal section.side-by-side h1:nth-of-type(2) {
+	right: 25%;
+}
+
+div.smaller {
+	font-size: 75%;
+}
