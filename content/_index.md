@@ -95,7 +95,7 @@ Le principali rifattorizzazioni adottate possono essere classificate in _lessica
 
 ---
 
-<img src="01-levels-of-plagiarism.pdf"  width="400" height="300">
+{{< figure src="01-levels-of-plagiarism.pdf" height="100%" width="400" >}}
 
 {{% smaller %}}
 **Tassonomia dei livelli di plagio di Faidhi & Robinson (1987)**: mappa le possibili rifattorizzazioni in sette livelli o categorie, sulla base della loro difficoltà: il più semplice è il livello zero che corrisponde a una copia letterale; il più impegnativo è il sesto livello che corrisponde a un cambiamento logico e può essere considerato plagio solo se si verifica in concomitanza con altri livelli.
@@ -117,7 +117,7 @@ Un sistema antiplagio che non si limita a confrontare la similarità tra una cop
 
 Nel corso degli anni, è stato necessario porsi il problema di sviluppare strumenti di rilevamento automatici di plagi che fossero _efficienti_ ed _efficaci_.
 
-Con lo sviluppo della tecnologia, molti ricercatori hanno fatto progressi in questo campo e proposto diversi algoritmi, formando gradualmente tre popolari famiglie di tecniche:
+Tre popolari famiglie di tecniche:
 
 {{% fragment %}}
 - **attribute-based**
@@ -130,6 +130,8 @@ Con lo sviluppo della tecnologia, molti ricercatori hanno fatto progressi in que
 {{% fragment %}}
 - **tecniche ibride**
 {{% /fragment %}}
+
+---
 
 ---
 
