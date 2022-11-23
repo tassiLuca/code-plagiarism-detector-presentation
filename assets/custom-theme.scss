@@ -223,52 +223,14 @@ section.has-light-background {
 }
 
 // Mermaid graph resizing
-
 .mermaid svg {
 	max-width: 100% !important;
-	max-height: 43vh !important;
-	height: 20%;
-	width: 100vw;
+	max-height: 100% !important;
+	height: auto;
+	width: 95%;
 	transition: transform 0.3s ease;
 	border-width: 0.1em;
 	border-style: none;
-}
-
-// Mermaid flowcharts as git graphs
-
-.mermaid .cluster.repo > rect {
-	stroke-width: 0.2em !important;
-	fill: ghostwhite !important;
-	stroke: gray !important;
-}
-.mermaid .remote > path {
-	stroke-width: 0.2em !important;
-	fill: rgb(253, 189, 253) !important;
-	stroke: rgb(170, 0, 255) !important;
-}
-
-.mermaid .head > polygon {
-	fill:#ff7274 !important;
-	stroke:#aa1d1f !important;
-	stroke-width: 0.2em !important;
-}
-
-.mermaid .branch > rect {
-	stroke-width: 0.2em !important;
-	fill: greenyellow !important;
-	stroke: green !important;
-}
-
-.mermaid .commit > rect {
-	fill: white !important;
-	stroke:#333 !important;
-	stroke-width: 0.2em !important;
-}
-
-.mermaid .tag > polygon {
-	fill: cyan !important;
-	stroke: blue !important;
-	stroke-width: 0.2em !important;
 }
 
 .reveal section.side-by-side h1 {
@@ -276,11 +238,20 @@ section.has-light-background {
 }
 
 .reveal section.side-by-side h1:first-of-type {
-	left: 25%;
+	left: 15%;
 }
 
 .reveal section.side-by-side h1:nth-of-type(2) {
-	right: 25%;
+	right: 15%;
+}
+
+.container {
+    display: flex;
+}
+
+.col {
+	text-align: center;
+	align-self: center;
 }
 
 div.smaller {

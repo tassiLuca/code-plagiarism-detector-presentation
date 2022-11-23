@@ -40,7 +40,7 @@ L'elaborato, quindi, si addentra nelle tecniche di analisi e d'individuazione di
 # Perché un sistema antiplagio **automatico**?
 
 {{% fragment %}}
-- La *complessità* dei progetti software *aumenta*;
+- La *complessità* dei progetti software è in *aumento*;
 {{% /fragment %}}
 
 {{% fragment %}}
@@ -52,46 +52,18 @@ L'elaborato, quindi, si addentra nelle tecniche di analisi e d'individuazione di
 {{% /fragment %}}
 
 {{% fragment %}}
-In generale, creare un software antiplagio è **_complesso_**. 
+Creare un software antiplagio è tuttavia **_complesso_**. 
 
 Sono due le principali sfide da affrontare durante la progettazione.
 {{% /fragment %}}
 
 ---
 
-## Prima sfida: creare un tool più "furbo" dello sviluppatore
+## Prima sfida: creare un tool "più furbo" dello sviluppatore
 
 Quando la copiatura è un atto deliberato, lo sviluppatore adotta un insieme di tecniche per cercare di _offuscarle_.
 
-Le principali rifattorizzazioni adottate possono essere classificate in _lessicali_ e _strutturali_.
-
----
-
-{{< slide transition="zoom" transition-speed="fast" >}}
-- _lessicali:_
-  - possono essere eseguite, in linea di principio, da un text editor
-  - non richiedono la conoscenza del linguaggio di programmazione
-  - Alcuni esempi:
-    {{% smaller %}}
-    - riformulazione di commenti, la loro aggiunta o rimozione;
-    - riformattazione del testo, l'introduzione di spazi vuoti, di nuove linee o il cambio dell'ordine dei parametri nella definizione delle funzioni;
-    -  cambiare il nome degli identificatori e delle funzioni o i tipi di dato: ad esempio da `int` a `Integer` o da `float` a `double`.
----
-
-{{< slide transition="zoom" transition-speed="fast" >}}
-- _strutturali:_
-  - fortemente dipendenti dal linguaggio di programmazione $\Rightarrow$ maggior sforzo in termini di comprensione della logica del codice;
-  - Alcuni esempi:
-    <div class="smaller">
-    {{< markdown >}}
-    - aggiungere istruzioni ridondanti, come dichiarazioni, inizializzazioni, istruzioni di stampa;
-    - sostituire i costrutti di loop con costrutti equivalenti: passare da `for` a `do/while`, o da un approccio iterativo a uno funzionale, ad esempio tramite l’uso degli Stream in Java;
-    - sostituire istruzioni `if` nidificate con dichiarazioni equivalenti, ad esempio `switch-case` o `when` in Kotlin, e viceversa;
-    - cambiare l’ordine d’istruzioni indipendenti;
-    - cambiare l’ordine degli operandi: ad esempio `x < y` può essere cambiato in `y >= x`;
-    - sostituire la chiamata a funzione con il corpo della stessa
-    {{< /markdown >}}
-    </div>
+Un qualunque sistema di rilevamento di plagi, perché possa essere considerato _robusto_ ed _efficace_, dovrà essere "poco" influenzabile da queste possibili rifattorizzazioni.
 
 ---
 
@@ -110,7 +82,7 @@ Un sistema antiplagio che non si limita a confrontare la similarità tra una cop
 - per ogni valutazione, il numero di confronti da effettuare è tipicamente elevato
   <div class="smaller">
   {{< markdown >}}
-  - detto $N$ il numero di progetti, volendo confrontare tutte le coppie di progetti tra loro, dovrebbero essere eseguite $N(N−1)$ comparazioni.
+  - detto $N$ il numero di progetti, volendo confrontare tutte le coppie di progetti tra loro, dovrebbero essere eseguite $\frac{N(N-1)}{2}$ comparazioni.
   </div>
 
 ---
@@ -133,28 +105,67 @@ Tre popolari famiglie di tecniche:
 
 ---
 
+## Attribute based
+- sono quelle che storicamente sono state introdotte per prime
+  - il primo sistema automatico di plagi (1976) utilizzava le metriche di _Healstead_ per determinare la similarità
+- Utilizzano metriche basate su attributi intrinseci del codice sorgente
+  - numero di istruzioni di _loop_, espressioni condizionali, ...
+- ✅ semplicità
+- ❌ non sono strettamente correlate alla semantica del programma $\rightarrow$ la misurazione della somiglianza può risultare essere imprecisa. In generale l’efficacia di queste tecniche è _considerevolmente limitata_ in termini di accuratezza
+
 ---
 
+## Structure based
+- si basano, come suggerisce il nome, sulla struttura dei codici sorgenti per determinare il grado di similarità tra gli stessi.
+- Nella maggioranza dei casi, i sistemi che implementano questo tipo di tecnica lavorano in due fasi consecutive: prima il codice sorgente viene _analizzato_ e viene generata una _rappresentazione intermedia_, poi si effettua il _confronto_ dei sorgenti sulle rappresentazioni intermedie.
+  <div class="smaller">
+  {{< markdown >}}
+  - Questa è la tecnica implementata nel tool sviluppato!
+  </div>
+- ✅ efficacia
+- ❌ onerosi computazionalmente
+
+---
+
+## Tecniche ibride
+- Visti gli aspetti positivi e negativi delle due tecniche precedenti alcuni lavori di ricerca hanno cercato di combinare entrambi gli approcci creando tecniche di analisi ibride, presi a prestito anche da altri domini (vedi analisi testuale).
+  - Tra queste spiccano la _Latent Semantic Analysis_ e tecniche di _clustering_
+  - Altri metodi in via di sviluppo che impiegano algoritmi di _machine learning_ (_Random Forest_ e _Gradient Boosting_ applicati agli alberi di regressione)
+
+---
+
+<div class="container">
+<div class="col" style="width: 35%; font-size: 0.8em; vertical-align: center">
+
+## Il tool sviluppato
+- usa una tecnica _structure_ based
+1. Fase di _analisi_: i sorgenti sono trasformati in sequenze di _token_
+2. Fase di _filtraggio_: le rappresentazioni sono filtrare in accordo ad una metrica
+3. Fase di _confronto_ delle rappresentazioni
+
+</div>
+<div class="col" style="width: 65%;">
+
 ```mermaid
-classDiagram
-    Animal <|-- Duck
-    Animal <|-- Fish
-    Animal <|-- Zebra
-    Animal : +int age
-    Animal : +String gender
-    Animal: +isMammal()
-    Animal: +mate()
-    class Duck{
-        +String beakColor
-        +swim()
-        +quack()
-    }
-    class Fish{
-        -int sizeInFeet
-        -canEat()
-    }
-    class Zebra{
-        +bool is_wild
-        +run()
-    }
+flowchart TB
+    sources[(Program Sources)] -- strings --> analysis
+    subgraph analysis
+    direction LR
+        Parsing[1.Parsing] -- AST --> Cleaning[2.Cleaning]
+        Cleaning -- Cleaned AST --> Tokenization[3.Tokenization]
+    end
+    analysis -- token sequences --> optional
+    subgraph optional[optional filtering]
+        direction LR
+        Indexing[4.Indexing] --> Filtering[5.Filtering]
+    end
+    optional -- filtered token sequences --> Detection[6.Detection]
+    Detection -- matches --> result(((Reports)))
 ```
+
+</div>
+</div>
+
+---
+
+
