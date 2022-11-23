@@ -300,6 +300,7 @@ A seguito dell’analisi del codice sorgente e della generazione della sequenza 
 - I progetti, coerenti per linguaggio di programmazione, sono recuperati a partire da _repository_ su _GitHub_ e _Bitbucket_.
 - Si assume che i progetti siano **tempo-invarianti** $\rightarrow$ vengono _cachati_ in modo tale da poter essere riutilizzate in analisi successive.
 - L'architettura è stata concepita per essere **estendibile** e **configurabile** nella tecnica e nei parametri da poter utilizzare.
+- ...
 
 ---
 
