@@ -67,7 +67,7 @@ Un qualunque sistema di rilevamento di plagi, perché possa essere considerato _
 
 ---
 
-{{< figure src="01-levels-of-plagiarism.pdf" height="100%" width="400" >}}
+{{< figure src="01-levels-of-plagiarism.svg" height="100%" width="400" >}}
 
 {{% smaller %}}
 **Tassonomia dei livelli di plagio di Faidhi & Robinson (1987)**: mappa le possibili rifattorizzazioni in sette livelli o categorie, sulla base della loro difficoltà: il più semplice è il livello zero che corrisponde a una copia letterale; il più impegnativo è il sesto livello che corrisponde a un cambiamento logico e può essere considerato plagio solo se si verifica in concomitanza con altri livelli.
@@ -190,9 +190,9 @@ flowchart TB
 3. L'albero viene visitato e vengono emessi i _token_
 
 </div>
-<div class="col" style="width: 65%;">
+<div class="col" style="width: 80%;">
 
-{{< figure src="01-ast-summarized.pdf" height="100%" width="100%" >}}
+{{< figure src="01-ast-summarized.svg" height="100%" width="100%" >}}
 
 </div>
 </div>
