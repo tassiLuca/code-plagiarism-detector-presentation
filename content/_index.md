@@ -303,66 +303,18 @@ A seguito dell’analisi del codice sorgente e della generazione della sequenza 
 
 ---
 
-```mermaid
-classDiagram
-direction TB
-class AntiPlagiarismSession {
-    <<interface>>
-    +invoke()
-}
-AntiPlagiarismSession *--> RunConfiguration
+# \<SCHEMA ARCHITETTURALE\>
 
-class RunConfigurator {
-    <<interface>>
-}
-CLIConfigurator ..|> RunConfigurator
+---
 
-class RunConfiguration {
-    <<inteface>>
-}
-RunConfigurator ..> RunConfiguration: << creates >>
+# RISULTATI 
 
-class RepositoryProvider {
-    <<interface>>
-}
-class Repository {
-    <<interface>>
-}
-Repository "2..*" <--* RunConfiguration
-RepositoryProvider ..> Repository: << creates >>
+---
 
-class PlagiarismDetector {
-    <<interface>>
-}
-RunConfiguration *--> "1" PlagiarismDetector
+# SVILUPPI FUTURI
 
-class Analyzer {
-    <<interface>>
-}
-RunConfiguration *--> "1" Analyzer
+---
 
-class Filter {
-    <<interface>>
-}
-RunConfiguration *--> "1" Filter
+# ESEMPIO DI REPORT GENERATO DALLO STRUMENTO
 
-class KnoledgeBaseRepository {
-    <<interface>>
-    + save()
-    + load()
-}
-KnoledgeBaseRepository "1" <--* AntiPlagiarismSession
-
-class Output {
-    <<interface>>
-}
-class ReportsExporter {
-    <<interface>>
-    +export(reports: Set~Report~)
-}
-Output <|-- ReportsExporter
-ReportsExporter <|.. FileExporter
-RunConfiguration *--> "1" ReportsExporter
-Output <|.. CLIOutput
-AntiPlagiarismSession *--> "1" Output
-```
+---
