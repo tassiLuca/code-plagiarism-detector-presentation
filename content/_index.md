@@ -110,8 +110,14 @@ Tre popolari famiglie di tecniche:
   - il primo sistema automatico di plagi (1976) utilizzava le metriche di _Healstead_ per determinare la similarità
 - Utilizzano metriche basate su attributi intrinseci del codice sorgente
   - numero di istruzioni di _loop_, espressioni condizionali, ...
+
+{{% fragment %}}
 - ✅ semplicità
+{{% /fragment %}}
+
+{{% fragment %}}
 - ❌ non sono strettamente correlate alla semantica del programma $\rightarrow$ la misurazione della somiglianza può risultare essere imprecisa. In generale l’efficacia di queste tecniche è _considerevolmente limitata_ in termini di accuratezza
+{{% /fragment %}}
 
 ---
 
@@ -122,8 +128,14 @@ Tre popolari famiglie di tecniche:
   {{< markdown >}}
   - Questa è la tecnica implementata nel tool sviluppato!
   </div>
+
+{{% fragment %}}
 - ✅ efficacia
+{{% /fragment %}}
+
+{{% fragment %}}
 - ❌ onerosi computazionalmente
+{{% /fragment %}}
 
 ---
 
@@ -165,6 +177,27 @@ flowchart TB
 
 </div>
 </div>
+
+---
+
+## Fase di analisi
+
+<div class="container">
+<div class="col" style="width: 35%; font-size: 0.8em; vertical-align: center">
+
+1. I sorgenti sono **parsati** $\rightarrow$ _Abstract Syntax Tree_
+2. Fase intermedia di _preprocessing_ in cui dall’albero vengono rimosse le dichiarazioni irrilevanti: commenti, dichiarazione di `import` e `package`, funzioni generate automaticamente dall'IDE, come `hashCode()` e `equals()`.
+3. L'albero viene visitato e vengono emessi i _token_
+
+</div>
+<div class="col" style="width: 65%;">
+
+{{< figure src="01-ast-summarized.pdf" height="100%" width="100%" >}}
+
+</div>
+</div>
+
+---
 
 ---
 

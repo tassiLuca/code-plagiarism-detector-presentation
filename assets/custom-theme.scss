@@ -224,13 +224,13 @@ section.has-light-background {
 
 // Mermaid graph resizing
 .mermaid svg {
-	max-width: 100% !important;
-	max-height: 100% !important;
-	height: auto;
-	width: 95%;
-	transition: transform 0.3s ease;
-	border-width: 0.1em;
-	border-style: none;
+    max-width: 100% !important;
+    max-height: 100% !important;
+    height: auto;
+    width: 95%;
+    transition: transform 0.3s ease;
+    border-width: 0.1em;
+    border-style: none;
 }
 
 .reveal section.side-by-side h1 {
@@ -238,11 +238,11 @@ section.has-light-background {
 }
 
 .reveal section.side-by-side h1:first-of-type {
-	left: 15%;
+	left: 25%;
 }
 
 .reveal section.side-by-side h1:nth-of-type(2) {
-	right: 15%;
+	right: 25%;
 }
 
 .container {
