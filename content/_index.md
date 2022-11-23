@@ -149,7 +149,7 @@ Tre popolari famiglie di tecniche:
 <div class="container">
 <div class="col" style="width: 35%; font-size: 0.8em; vertical-align: center">
 
-## Il tool sviluppato
+# Il tool sviluppato
 - usa una tecnica _structure_ based
 1. Fase di _analisi_: i sorgenti sono trasformati in sequenze di _token_
 2. Fase di _filtraggio_: le rappresentazioni sono filtrare in accordo ad una metrica
@@ -197,3 +197,172 @@ flowchart TB
 </div>
 </div>
 
+---
+
+<div class="container">
+<div class="col" style="margin-left: -7%">
+
+### Prima dell'analisi
+
+```java
+package org.examples;
+
+import java.util.Arrays;
+
+/**
+ * This is a sample class to demonstrate the tokenization process.
+ */
+public class Main {
+    public static void main(String[] args) {
+        if (args.length > 0) {
+            System.out.println("Program arguments: " + Arrays.toString(args));
+        } else {
+            System.out.println("Hello world from Java!");
+        }
+    }
+}
+```
+
+</div>
+<div class="col">
+
+{{% fragment %}}
+
+### Dopo la _tokenizzazione_
+
+```text
+[class-interface-decl (line=8, column=1), 
+method-decl (line=9, column=5), 
+parameter (line=9, column=29), 
+block-stmt (line=9, column=44), 
+if-stmt (line=10, column=9), 
+binary-expr (line=10, column=13), 
+field-access-expr (line=10, column=13), 
+name-expr (line=10, column=13), 
+literal-expr (line=10, column=27), 
+block-stmt (line=10, column=30), 
+expression-stmt (line=11, column=13), 
+method-call-expr (line=11, column=13), 
+field-access-expr (line=11, column=13), 
+name-expr (line=11, column=13), 
+binary-expr (line=11, column=32), 
+literal-expr (line=11, column=32), 
+method-call-expr (line=11, column=56), 
+name-expr (line=11, column=56), 
+name-expr (line=11, column=72), 
+block-stmt (line=12, column=16), 
+expression-stmt (line=13, column=13),
+method-call-expr (line=13, column=13), 
+field-access-expr (line=13, column=13), 
+name-expr (line=13, column=13), 
+literal-expr (line=13, column=32)]
+```
+
+{{% /fragment %}}
+
+</div>
+</div>
+
+
+---
+
+## Fase di filtraggio
+
+A seguito dell’analisi del codice sorgente e della generazione della sequenza di token i sorgenti del corpus possono essere filtrati, al fine di limitare il numero di progetti da dover confrontare e, quindi, ridurre il tempo d'esecuzione.
+
+1. Fase d’_indicizzazione_ in cui vengono aggregati i dati sotto forma di una struttura dati per mezzo della quale è possibile estrarre informazioni statistiche significative per la stima della similarità
+2. ...
+
+---
+
+## Fase di confronto delle rappresentazione
+
+- vengono impiegati algoritmi di _string matching_, riadattati per operare su sequenze di _token_
+  - _Running Karp-Rabin Greedy String Tiling_, introdotto da M. Wise nel 1993, a seguito della necessità di sviluppare proprio un sistema automatico antiplagio, anche se negli anni successivi gli stessi algoritmi sono stati impiegati in altri campi, tra cui il confronto di sequenze di proteine/DNA.
+    - Complessità: nel caso **pessimo** $O(n^2)$, nel caso **medio** ...
+
+---
+
+## Stima di similarità tra sorgenti
+
+...
+
+---
+
+## Stima di similarità tra progetti
+
+...
+
+---
+
+# Progettazione
+
+- I progetti, coerenti per linguaggio di programmazione, sono recuperati a partire da _repository_ su _GitHub_ e _Bitbucket_.
+- Si assume che i progetti siano **tempo-invarianti** $\rightarrow$ vengono _cachati_ in modo tale da poter essere riutilizzate in analisi successive.
+- L'architettura è stata concepita per essere **estendibile** e **configurabile** nella tecnica e nei parametri da poter utilizzare.
+
+---
+
+```mermaid
+classDiagram
+direction TB
+class AntiPlagiarismSession {
+    <<interface>>
+    +invoke()
+}
+AntiPlagiarismSession *--> RunConfiguration
+
+class RunConfigurator {
+    <<interface>>
+}
+CLIConfigurator ..|> RunConfigurator
+
+class RunConfiguration {
+    <<inteface>>
+}
+RunConfigurator ..> RunConfiguration: << creates >>
+
+class RepositoryProvider {
+    <<interface>>
+}
+class Repository {
+    <<interface>>
+}
+Repository "2..*" <--* RunConfiguration
+RepositoryProvider ..> Repository: << creates >>
+
+class PlagiarismDetector {
+    <<interface>>
+}
+RunConfiguration *--> "1" PlagiarismDetector
+
+class Analyzer {
+    <<interface>>
+}
+RunConfiguration *--> "1" Analyzer
+
+class Filter {
+    <<interface>>
+}
+RunConfiguration *--> "1" Filter
+
+class KnoledgeBaseRepository {
+    <<interface>>
+    + save()
+    + load()
+}
+KnoledgeBaseRepository "1" <--* AntiPlagiarismSession
+
+class Output {
+    <<interface>>
+}
+class ReportsExporter {
+    <<interface>>
+    +export(reports: Set~Report~)
+}
+Output <|-- ReportsExporter
+ReportsExporter <|.. FileExporter
+RunConfiguration *--> "1" ReportsExporter
+Output <|.. CLIOutput
+AntiPlagiarismSession *--> "1" Output
+```
