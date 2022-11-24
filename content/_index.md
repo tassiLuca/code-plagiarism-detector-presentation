@@ -78,18 +78,25 @@ Creare un software antiplagio è _complesso_!
 ### Stadi logici di un tool antiplagio
 
 </div>
-<div class="col" style="width: 50%; padding: 0 22%">
+<div class="col" style="width: 50%; padding: 0 23%">
 
 ```mermaid
 flowchart TB
     sources[(Program Sources)] -- strings --> analysis[1. Analysis]
-    analysis -- token sequences --> filtering[2. Filtering]
-    filtering -- filtered token sequences --> Detection[6.Detection]
+    analysis -- representations --> filtering[2. Filtering]
+    filtering -- filtered representations --> Detection[6.Detection]
     Detection -- matches --> result(((Reports)))
 ```
 
 </div>
 </div>
+
+---
+
+# Il tool sviluppato
+- permette di reperire i progetti da _repository_ _GitHub_ e _Bitbcuket_
+- effettua l'analisi dei sorgenti utilizzando una tecnica _structure based_
+- genera un report testuale con la stima di similarità repo-to-repo e con le parti di codici individuate come simili
 
 ---
 
@@ -115,7 +122,7 @@ flowchart TB
 <div class="container">
 <div class="col" style="margin-left: -7%">
 
-### Prima dell'analisi
+**Prima dell'analisi**
 
 ```java
 package org.examples;
@@ -141,7 +148,7 @@ public class Main {
 
 {{% fragment %}}
 
-### Dopo la _tokenizzazione_
+**Dopo la _tokenizzazione_**
 
 ```text
 [class-interface-decl (line=8, column=1), 
@@ -194,26 +201,58 @@ flowchart TB
 
 </div>
 
-4. Le rappresentazioni sono aggregate sotto forma di una struttura dati dalla quale è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità
+1. Le rappresentazioni (sequenze di _token_) sono aggregate sotto forma di strutture dati dalla quali è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità
 
 {{% fragment %}}
 
 ### Fase 3: Detection
-Vengono applicati algoritmi di _matching_ sulle coppie di rappresentazioni non scartate dalla fase precedente.
+Sono applicati algoritmi di _string matching_, riadattati per funzionare su sequenze di token.
 
 {{% /fragment %}}
 
 ---
 
-## Il tool sviluppato...
+## Configurabilità del tool
 
-- permette di reperire i progetti da _repository_ su _GitHub_/_Bitbucket_
-- 
-
----
-
-## Configurabilità
+- interfaccia a riga di comando che permette la configurazione:
+  - lunghezza minima della sequenza di _token_ che dovrebbe essere riportata
+  - soglia di similarità tra sorgenti ($ 0. \div 1.$)
+  - soglia di filtraggio dei sorgenti ($ 0. \div 1.$)
 
 ---
 
-## Validazione
+## Esempio di output
+
+---
+
+# Validazione dei risultati
+
+- **submission set**: 130 progetti universitari sviluppati in Java nel triennio 2019-21
+- **corpus set**: +354 progetti sottomessi nello stesso corso (2015-) 
+  - confronto a "prodotto cartesiano"
+
+---
+
+## Analisi di sensitività
+
+<div class="smaller">
+
+| **Progetto originale** | **Progetto copiato** | **Similarità** | **Ispezione manuale**      |
+|------------------------|----------------------|----------------|----------------------------|
+| 9b7266                 | 80fd2e               | 100\%          | corrispondenza totale      |
+| f0caf3                 | c1e451               | 90\%           | corrispondenza totale      |
+| ac8a48                 | 7d79ff               | 81\%           | corrispondenza elevata     |
+| 7bc0ee                 | 2308d9               | 70\%           | corrispondenza medio-alta  |
+| a5c39e                 | 2ed153               | 62\%           | corrispondenza medio-alta  |
+| 005bc2                 | f67c20               | 55\%           | corrispondenza parziale    |
+| 501b0f                 | c01302               | 49\%           | corrispondenza parziale    |
+| 8f5d5a                 | afcd72               | 48\%           | falso positivo             |
+
+</div>
+
+---
+
+# 🙏
+### Grazie per l'attenzione!
+
+---
