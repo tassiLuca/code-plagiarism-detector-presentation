@@ -5,4 +5,10 @@ _gen/
 *build.lock
 pid
 node_modules/
+
+# MacOS garbage files
 .DS_Store
+
+# drawio files
+*.dtmp
+*.bkp

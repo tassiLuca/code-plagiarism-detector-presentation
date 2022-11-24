@@ -35,7 +35,7 @@ theme = "white"
 highlight_theme = "default"
 slide_number = true
 transition = "slide"
-transition_speed = "fast"
+transition_speed = "medium"
 custom_theme = "custom-theme.scss"
 custom_theme_compile = true
 
