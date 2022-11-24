@@ -1,6 +1,6 @@
-baseURL = "https://tassiLuca.github.io/code-plagiarism-detector-presentation"
+baseURL = "https://tassiLuca.github.io/thesis-presentation"
 languageCode = "en-us"
-title = "Code Plagiarism Detector Presentation"
+title = "Thesis Presentation"
 disableKinds = ["sitemap", "RSS"]
 theme = "reveal-hugo"
 publishDir = "public"
