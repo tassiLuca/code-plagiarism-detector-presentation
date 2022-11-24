@@ -95,16 +95,23 @@
 <div class="col" style="width: 50%; text-align: right">
 <h3 id="stadi-logici-di-un-tool-antiplagio">Stadi logici di un tool antiplagio</h3>
 </div>
-<div class="col" style="width: 50%; padding: 0 22%">
+<div class="col" style="width: 50%; padding: 0 23%">
 <div class="mermaid">flowchart TB
     sources[(Program Sources)] -- strings --> analysis[1. Analysis]
-    analysis -- token sequences --> filtering[2. Filtering]
-    filtering -- filtered token sequences --> Detection[6.Detection]
+    analysis -- representations --> filtering[2. Filtering]
+    filtering -- filtered representations --> Detection[6.Detection]
     Detection -- matches --> result(((Reports)))
 </div>
 
 </div>
 </div>
+</section><section>
+<h1 id="il-tool-sviluppato">Il tool sviluppato</h1>
+<ul>
+<li>permette di reperire i progetti da <em>repository</em> <em>GitHub</em> e <em>Bitbcuket</em></li>
+<li>effettua l&rsquo;analisi dei sorgenti utilizzando una tecnica <em>structure based</em></li>
+<li>genera un report testuale con la stima di similarità repo-to-repo e con le parti di codici individuate come simili</li>
+</ul>
 </section><section>
 <h3 id="fase-1-analisi">Fase 1: Analisi</h3>
 <p><strong>Scopo:</strong> trasformare i sorgenti in rappresentazioni confrontabili che astraggano dai dettagli del linguaggio</p>
@@ -124,7 +131,7 @@
 </section><section>
 <div class="container">
 <div class="col" style="margin-left: -7%">
-<h3 id="prima-dellanalisi">Prima dell&rsquo;analisi</h3>
+<p><strong>Prima dell&rsquo;analisi</strong></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span><span style="color:#a90d91">package</span> <span style="color:#000">org.examples</span><span style="color:#000">;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#a90d91">import</span> <span style="color:#000">java.util.Arrays</span><span style="color:#000">;</span>
@@ -144,7 +151,7 @@
 </span></span></code></pre></div></div>
 <div class="col">
 <span class='fragment ' >
-  <h3 id="dopo-la-_tokenizzazione_">Dopo la <em>tokenizzazione</em></h3>
+  <p><strong>Dopo la <em>tokenizzazione</em></strong></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span>[class-interface-decl (line=8, column=1), 
 </span></span><span style="display:flex;"><span>method-decl (line=9, column=5), 
 </span></span><span style="display:flex;"><span>parameter (line=9, column=29), 
@@ -186,23 +193,104 @@
 </div>
 
 </div>
-<ol start="4">
-<li>Le rappresentazioni sono aggregate sotto forma di una struttura dati dalla quale è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità</li>
+<ol>
+<li>Le rappresentazioni (sequenze di <em>token</em>) sono aggregate sotto forma di strutture dati dalla quali è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità</li>
 </ol>
 <span class='fragment ' >
   <h3 id="fase-3-detection">Fase 3: Detection</h3>
-<p>Vengono applicati algoritmi di <em>matching</em> sulle coppie di rappresentazioni non scartate dalla fase precedente.</p>
+<p>Sono applicati algoritmi di <em>string matching</em>, riadattati per funzionare su sequenze di token.</p>
 </span>
 </section><section>
-<h2 id="il-tool-sviluppato">Il tool sviluppato&hellip;</h2>
+<h2 id="configurabilità-del-tool">Configurabilità del tool</h2>
 <ul>
-<li>permette di reperire i progetti da <em>repository</em> su <em>GitHub</em>/<em>Bitbucket</em></li>
-<li></li>
+<li>interfaccia a riga di comando che permette la configurazione:
+<ul>
+<li>lunghezza minima della sequenza di <em>token</em> che dovrebbe essere riportata</li>
+<li>soglia di similarità tra sorgenti ($ 0. \div 1.$)</li>
+<li>soglia di filtraggio dei sorgenti ($ 0. \div 1.$)</li>
+</ul>
+</li>
 </ul>
 </section><section>
-<h2 id="configurabilità">Configurabilità</h2>
+<h2 id="esempio-di-output">Esempio di output</h2>
 </section><section>
-<h2 id="validazione">Validazione</h2>
+<h1 id="validazione-dei-risultati">Validazione dei risultati</h1>
+<ul>
+<li><strong>submission set</strong>: 130 progetti universitari sviluppati in Java nel triennio 2019-21</li>
+<li><strong>corpus set</strong>: +354 progetti sottomessi nello stesso corso (2015-)
+<ul>
+<li>confronto a &ldquo;prodotto cartesiano&rdquo;</li>
+</ul>
+</li>
+</ul>
+</section><section>
+<h2 id="analisi-di-sensitività">Analisi di sensitività</h2>
+<div class="smaller">
+<table>
+<thead>
+<tr>
+<th><strong>Progetto originale</strong></th>
+<th><strong>Progetto copiato</strong></th>
+<th><strong>Similarità</strong></th>
+<th><strong>Ispezione manuale</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>9b7266</td>
+<td>80fd2e</td>
+<td>100%</td>
+<td>corrispondenza totale</td>
+</tr>
+<tr>
+<td>f0caf3</td>
+<td>c1e451</td>
+<td>90%</td>
+<td>corrispondenza totale</td>
+</tr>
+<tr>
+<td>ac8a48</td>
+<td>7d79ff</td>
+<td>81%</td>
+<td>corrispondenza elevata</td>
+</tr>
+<tr>
+<td>7bc0ee</td>
+<td>2308d9</td>
+<td>70%</td>
+<td>corrispondenza medio-alta</td>
+</tr>
+<tr>
+<td>a5c39e</td>
+<td>2ed153</td>
+<td>62%</td>
+<td>corrispondenza medio-alta</td>
+</tr>
+<tr>
+<td>005bc2</td>
+<td>f67c20</td>
+<td>55%</td>
+<td>corrispondenza parziale</td>
+</tr>
+<tr>
+<td>501b0f</td>
+<td>c01302</td>
+<td>49%</td>
+<td>corrispondenza parziale</td>
+</tr>
+<tr>
+<td>8f5d5a</td>
+<td>afcd72</td>
+<td>48%</td>
+<td>falso positivo</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section><section>
+<h1 id="heading">🙏</h1>
+<h3 id="grazie-per-lattenzione">Grazie per l&rsquo;attenzione!</h3>
+</section><section>
 </div></section>
 
   
