@@ -91,9 +91,11 @@
 </div>
 </div>
 </section><section>
-<h1 id="gli-stadi-logici-di-un-tool-antiplagio">Gli stadi logici di un tool antiplagio</h1>
-</section><section>
-<div style="width: 27%; padding: 0 36%;">
+<div class="container">
+<div class="col" style="width: 50%; text-align: right">
+<h3 id="stadi-logici-di-un-tool-antiplagio">Stadi logici di un tool antiplagio</h3>
+</div>
+<div class="col" style="width: 50%; padding: 0 22%">
 <div class="mermaid">flowchart TB
     sources[(Program Sources)] -- strings --> analysis[1. Analysis]
     analysis -- token sequences --> filtering[2. Filtering]
@@ -102,22 +104,105 @@
 </div>
 
 </div>
+</div>
 </section><section>
 <h3 id="fase-1-analisi">Fase 1: Analisi</h3>
+<p><strong>Scopo:</strong> trasformare i sorgenti in rappresentazioni confrontabili che astraggano dai dettagli del linguaggio</p>
 <div class="mermaid">flowchart TB
     subgraph analysis
     direction LR
-        Parsing[1.Parsing] -- AST --> Cleaning[2.Cleaning]
-        Cleaning -- Cleaned AST --> Tokenization[3.Tokenization]
+        Parsing[1.Parsing] -- AST --> Preprocess[2.Preprocessing]
+        Preprocess -- Cleaned AST --> Tokenization[3.Tokenization]
     end
 </div>
 
+<ol>
+<li>I file sono <em>parsati</em> $\rightarrow$ è generato l&rsquo;<em>Abstract Syntax Tree</em></li>
+<li><em>Preprocessing</em>: l&rsquo;AST viene &ldquo;ripulito&rdquo; da dettagli insignificanti a livello semantico (commenti, dichiarazioni di <code>import</code>, <code>package</code>, &hellip;)</li>
+<li>L&rsquo;AST viene visitato e vengono &ldquo;emessi&rdquo; i <em>token</em> corrispondenti ai costrutti del linguaggio da valorizzare</li>
+</ol>
 </section><section>
+<div class="container">
+<div class="col" style="margin-left: -7%">
+<h3 id="prima-dellanalisi">Prima dell&rsquo;analisi</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span><span style="color:#a90d91">package</span> <span style="color:#000">org.examples</span><span style="color:#000">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">import</span> <span style="color:#000">java.util.Arrays</span><span style="color:#000">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#177500">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#177500"> * This is a sample class to demonstrate the tokenization process.
+</span></span></span><span style="display:flex;"><span><span style="color:#177500"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">public</span> <span style="color:#a90d91">class</span> <span style="color:#3f6e75">Main</span> <span style="color:#000">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">public</span> <span style="color:#a90d91">static</span> <span style="color:#a90d91">void</span> <span style="color:#000">main</span><span style="color:#000">(</span><span style="color:#000">String</span><span style="color:#000">[]</span> <span style="color:#000">args</span><span style="color:#000">)</span> <span style="color:#000">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">if</span> <span style="color:#000">(</span><span style="color:#000">args</span><span style="color:#000">.</span><span style="color:#836c28">length</span> <span style="color:#000">&gt;</span> <span style="color:#000">0</span><span style="color:#000">)</span> <span style="color:#000">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">System</span><span style="color:#000">.</span><span style="color:#836c28">out</span><span style="color:#000">.</span><span style="color:#836c28">println</span><span style="color:#000">(</span><span style="color:#c41a16">&#34;Program arguments: &#34;</span> <span style="color:#000">+</span> <span style="color:#000">Arrays</span><span style="color:#000">.</span><span style="color:#836c28">toString</span><span style="color:#000">(</span><span style="color:#000">args</span><span style="color:#000">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">}</span> <span style="color:#a90d91">else</span> <span style="color:#000">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">System</span><span style="color:#000">.</span><span style="color:#836c28">out</span><span style="color:#000">.</span><span style="color:#836c28">println</span><span style="color:#000">(</span><span style="color:#c41a16">&#34;Hello world from Java!&#34;</span><span style="color:#000">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">}</span>
+</span></span></code></pre></div></div>
+<div class="col">
+<span class='fragment ' >
+  <h3 id="dopo-la-_tokenizzazione_">Dopo la <em>tokenizzazione</em></h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span>[class-interface-decl (line=8, column=1), 
+</span></span><span style="display:flex;"><span>method-decl (line=9, column=5), 
+</span></span><span style="display:flex;"><span>parameter (line=9, column=29), 
+</span></span><span style="display:flex;"><span>block-stmt (line=9, column=44), 
+</span></span><span style="display:flex;"><span>if-stmt (line=10, column=9), 
+</span></span><span style="display:flex;"><span>binary-expr (line=10, column=13), 
+</span></span><span style="display:flex;"><span>field-access-expr (line=10, column=13), 
+</span></span><span style="display:flex;"><span>name-expr (line=10, column=13), 
+</span></span><span style="display:flex;"><span>literal-expr (line=10, column=27), 
+</span></span><span style="display:flex;"><span>block-stmt (line=10, column=30), 
+</span></span><span style="display:flex;"><span>expression-stmt (line=11, column=13), 
+</span></span><span style="display:flex;"><span>method-call-expr (line=11, column=13), 
+</span></span><span style="display:flex;"><span>field-access-expr (line=11, column=13), 
+</span></span><span style="display:flex;"><span>name-expr (line=11, column=13), 
+</span></span><span style="display:flex;"><span>binary-expr (line=11, column=32), 
+</span></span><span style="display:flex;"><span>literal-expr (line=11, column=32), 
+</span></span><span style="display:flex;"><span>method-call-expr (line=11, column=56), 
+</span></span><span style="display:flex;"><span>name-expr (line=11, column=56), 
+</span></span><span style="display:flex;"><span>name-expr (line=11, column=72), 
+</span></span><span style="display:flex;"><span>block-stmt (line=12, column=16), 
+</span></span><span style="display:flex;"><span>expression-stmt (line=13, column=13),
+</span></span><span style="display:flex;"><span>method-call-expr (line=13, column=13), 
+</span></span><span style="display:flex;"><span>field-access-expr (line=13, column=13), 
+</span></span><span style="display:flex;"><span>name-expr (line=13, column=13), 
+</span></span><span style="display:flex;"><span>literal-expr (line=13, column=32)]
+</span></span></code></pre></div>
+</span>
+</div>
+</div>
 </section><section>
+<h3 id="fase-2-filtraggio">Fase 2: Filtraggio</h3>
+<p><strong>Scopo:</strong> limitare il numero di confronti $\Rightarrow$ migliorare le prestazioni</p>
+<div style="padding: 0 20%">
+<div class="mermaid">flowchart TB
+    subgraph filtering[filtering]
+        direction LR
+        Indexing[4.Indexing] -- Index DS --> Filtering[5.Filtering]
+    end
+</div>
+
+</div>
+<ol start="4">
+<li>Le rappresentazioni sono aggregate sotto forma di una struttura dati dalla quale è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità</li>
+</ol>
+<span class='fragment ' >
+  <h3 id="fase-3-detection">Fase 3: Detection</h3>
+<p>Vengono applicati algoritmi di <em>matching</em> sulle coppie di rappresentazioni non scartate dalla fase precedente.</p>
+</span>
 </section><section>
+<h2 id="il-tool-sviluppato">Il tool sviluppato&hellip;</h2>
+<ul>
+<li>permette di reperire i progetti da <em>repository</em> su <em>GitHub</em>/<em>Bitbucket</em></li>
+<li></li>
+</ul>
 </section><section>
+<h2 id="configurabilità">Configurabilità</h2>
 </section><section>
-</section><section>
+<h2 id="validazione">Validazione</h2>
 </div></section>
 
   
