@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+  <head>
+	<meta name="generator" content="Hugo 0.104.2" />
+    <meta charset="utf-8">
+<title>Code Plagiarism Detector Presentation</title>
+<meta name="description" content="TODO">
+<meta name="author" content="Luca Tassinari">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/code-plagiarism-detector-presentation/reveal-js/dist/reset.css">
+<link rel="stylesheet" href="/code-plagiarism-detector-presentation/reveal-js/dist/reveal.css">
+  <link rel="stylesheet" href="/code-plagiarism-detector-presentation/css/custom-theme.min.6f7f125b35c7fd924fbe307084262ac597218b02a4a066cf41ffedca4c8806e2.css" id="theme"><link rel="stylesheet" href="/code-plagiarism-detector-presentation/highlight-js/default.min.css">
+    
+<link rel="stylesheet" href="https://gitcdn.link/repo/DanySK/css-blur-animation/master/blur.css">
+<link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Oxygen Mono' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Ubuntu Mono' rel='stylesheet'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css">
+
+  </head>
+  <body>
+    
+    <div class="reveal">
+      <div class="slides">
+  
+
+    <section data-noprocess>
+    <h4>Alma Mater Studiorum $\cdot$ Università di Bologna</h4>
+    <h6 style="font-size:0.8em;">Campus di Cesena</h6>
+    <hr/>
+    <p style="font-size:0.8em;">Dipartimento di informatica $-$ Scienza e Ingegneria</p>
+    <p style="font-size:0.8em;">Corso di Laurea in Ingegneria e Scienze Informatiche</p>
+    <h2 style="margin:1em 0"><a href="https://github.com/tassiLuca/bachelor-thesis/releases/latest">Progettazione e sviluppo di uno strumento per la scansione di progetti software alla ricerca di potenziali segni di plagio</a></h2>
+    <p style="font-size:0.8em; margin-bottom:0">Elaborato in</p>
+    <h6>PROGRAMMAZIONE A OGGETTI</h6>
+    <div style="margin-top:1em;">
+        <div style="width:50%; border-box:none; float: left">
+            <p style="font-size:0.7em">Relatore</p>
+            <p style="font-size:0.8em">Prof. Danilo Pianini</p>
+        </div>
+        <div style="width:50%; border-box:none; float: right">
+            <p style="font-size:0.7em;">Presentata da:</p>
+            <p style="font-size:0.8em;">Luca Tassinari</p>
+        </div>
+    </div>
+</section>
+</section><section>
+<h1 id="contesto-e-motivazioni">Contesto e motivazioni</h1>
+<p>Questa tesi nasce dalla necessità di sviluppare uno strumento capace d&rsquo;individuare potenziali <em>plagi</em> in progetti software.</p>
+<p>Il plagiarismo nel software è pratica che, nel tempo, ha visto numerosi scontri legali (ad esempio, Oracle contro Google per Android), e per il quale sono pochi i progetti open source di facile utilizzo pratico.</p>
+<p>L&rsquo;elaborato, quindi, si addentra nelle tecniche di analisi e d&rsquo;individuazione di possibili plagi, presentando il processo di progettazione e sviluppo dello strumento.</p>
+</section><section>
+<h1 id="perché-un-sistema-antiplagio-automatico">Perché un sistema antiplagio <strong>automatico</strong>?</h1>
+
+
+<span class='fragment ' >
+  <ul>
+<li>La <em>complessità</em> dei progetti software è in <em>aumento</em>;</li>
+</ul>
+
+</span>
+
+
+
+<span class='fragment ' >
+  <ul>
+<li>La <em>quantità</em> di progetti software a disposizione cresce esponenzialmente;</li>
+</ul>
+
+</span>
+
+
+
+<span class='fragment ' >
+  <ul>
+<li>Farlo manualmente è tedioso, impiega molto tempo e risorse!</li>
+</ul>
+
+</span>
+
+
+
+<span class='fragment ' >
+  <p>Creare un software antiplagio è tuttavia <strong><em>complesso</em></strong>.</p>
+<p>Sono due le principali sfide da affrontare durante la progettazione.</p>
+
+</span>
+
+</section><section>
+<h2 id="prima-sfida-creare-un-tool-più-furbo-dello-sviluppatore">Prima sfida: creare un tool &ldquo;più furbo&rdquo; dello sviluppatore</h2>
+<p>Quando la copiatura è un atto deliberato, lo sviluppatore adotta un insieme di tecniche per cercare di <em>offuscarle</em>.</p>
+<p>Un qualunque sistema di rilevamento di plagi, perché possa essere considerato <em>robusto</em> ed <em>efficace</em>, dovrà essere &ldquo;poco&rdquo; influenzabile da queste possibili rifattorizzazioni.</p>
+</section><section>
+<figure><img src="01-levels-of-plagiarism.svg" width="400" height="100%"/>
+</figure>
+
+<div class="smaller">
+<p><strong>Tassonomia dei livelli di plagio di Faidhi &amp; Robinson (1987)</strong>: mappa le possibili rifattorizzazioni in sette livelli o categorie, sulla base della loro difficoltà: il più semplice è il livello zero che corrisponde a una copia letterale; il più impegnativo è il sesto livello che corrisponde a un cambiamento logico e può essere considerato plagio solo se si verifica in concomitanza con altri livelli.</p>
+</section><section>
+<h2 id="seconda-sfida-le-prestazioni">Seconda sfida: le prestazioni</h2>
+<p>Un sistema antiplagio che non si limita a confrontare la similarità tra una coppia di progetti, bensì effettui un controllo <em>uno a molti</em> o <em>molti a molti</em>, in cui si testano <em>tutte le possibili coppie</em>, sono le prestazioni.</p>
+<ul>
+<li>
+<p>la misurazione della somiglianza tra una coppia di sorgenti, nella gran parte degli algoritmi noti in letteratura, ha una complessità almeno quadratica nel numero delle istanze delle sue rappresentazioni</p>
+</li>
+<li>
+<p>per ogni valutazione, il numero di confronti da effettuare è tipicamente elevato</p>
+<div class="smaller">
+<ul>
+<li>detto $N$ il numero di progetti, volendo confrontare tutte le coppie di progetti tra loro, dovrebbero essere eseguite $\frac{N(N-1)}{2}$ comparazioni.</li>
+</ul>
+</div>
+</li>
+</ul>
+</section><section>
+<p>Nel corso degli anni, è stato necessario porsi il problema di sviluppare strumenti di rilevamento automatici di plagi che fossero <em>efficienti</em> ed <em>efficaci</em>.</p>
+<p>Tre popolari famiglie di tecniche:</p>
+<span class='fragment ' >
+  <ul>
+<li><strong>attribute-based</strong></li>
+</ul>
+</span>
+<span class='fragment ' >
+  <ul>
+<li><strong>structure-based</strong></li>
+</ul>
+</span>
+<span class='fragment ' >
+  <ul>
+<li><strong>tecniche ibride</strong></li>
+</ul>
+</span>
+</section><section>
+<h2 id="attribute-based">Attribute based</h2>
+<ul>
+<li>sono quelle che storicamente sono state introdotte per prime
+<ul>
+<li>il primo sistema automatico di plagi (1976) utilizzava le metriche di <em>Healstead</em> per determinare la similarità</li>
+</ul>
+</li>
+<li>Utilizzano metriche basate su attributi intrinseci del codice sorgente
+<ul>
+<li>numero di istruzioni di <em>loop</em>, espressioni condizionali, &hellip;</li>
+</ul>
+</li>
+</ul>
+<span class='fragment ' >
+  <ul>
+<li>✅ semplicità</li>
+</ul>
+</span>
+<span class='fragment ' >
+  <ul>
+<li>❌ non sono strettamente correlate alla semantica del programma $\rightarrow$ la misurazione della somiglianza può risultare essere imprecisa. In generale l’efficacia di queste tecniche è <em>considerevolmente limitata</em> in termini di accuratezza</li>
+</ul>
+</span>
+</section><section>
+<h2 id="structure-based">Structure based</h2>
+<ul>
+<li>
+<p>si basano, come suggerisce il nome, sulla struttura dei codici sorgenti per determinare il grado di similarità tra gli stessi.</p>
+</li>
+<li>
+<p>Nella maggioranza dei casi, i sistemi che implementano questo tipo di tecnica lavorano in due fasi consecutive: prima il codice sorgente viene <em>analizzato</em> e viene generata una <em>rappresentazione intermedia</em>, poi si effettua il <em>confronto</em> dei sorgenti sulle rappresentazioni intermedie.</p>
+<div class="smaller">
+<ul>
+<li>Questa è la tecnica implementata nel tool sviluppato!</li>
+</ul>
+</div>
+</li>
+</ul>
+<span class='fragment ' >
+  <ul>
+<li>✅ efficacia</li>
+</ul>
+</span>
+<span class='fragment ' >
+  <ul>
+<li>❌ onerosi computazionalmente</li>
+</ul>
+</span>
+</section><section>
+<h2 id="tecniche-ibride">Tecniche ibride</h2>
+<ul>
+<li>Visti gli aspetti positivi e negativi delle due tecniche precedenti alcuni lavori di ricerca hanno cercato di combinare entrambi gli approcci creando tecniche di analisi ibride, presi a prestito anche da altri domini (vedi analisi testuale).
+<ul>
+<li>Tra queste spiccano la <em>Latent Semantic Analysis</em> e tecniche di <em>clustering</em></li>
+<li>Altri metodi in via di sviluppo che impiegano algoritmi di <em>machine learning</em> (<em>Random Forest</em> e <em>Gradient Boosting</em> applicati agli alberi di regressione)</li>
+</ul>
+</li>
+</ul>
+</section><section>
+<div class="container">
+<div class="col" style="width: 35%; font-size: 0.8em; vertical-align: center">
+<h1 id="il-tool-sviluppato">Il tool sviluppato</h1>
+<ul>
+<li>usa una tecnica <em>structure</em> based</li>
+</ul>
+<ol>
+<li>Fase di <em>analisi</em>: i sorgenti sono trasformati in sequenze di <em>token</em></li>
+<li>Fase di <em>filtraggio</em>: le rappresentazioni sono filtrare in accordo ad una metrica</li>
+<li>Fase di <em>confronto</em> delle rappresentazioni</li>
+</ol>
+</div>
+<div class="col" style="width: 65%;">
+<div class="mermaid">flowchart TB
+    sources[(Program Sources)] -- strings --> analysis
+    subgraph analysis
+    direction LR
+        Parsing[1.Parsing] -- AST --> Cleaning[2.Cleaning]
+        Cleaning -- Cleaned AST --> Tokenization[3.Tokenization]
+    end
+    analysis -- token sequences --> optional
+    subgraph optional[optional filtering]
+        direction LR
+        Indexing[4.Indexing] --> Filtering[5.Filtering]
+    end
+    optional -- filtered token sequences --> Detection[6.Detection]
+    Detection -- matches --> result(((Reports)))
+</div>
+
+</div>
+</div>
+</section><section>
+<h2 id="fase-di-analisi">Fase di analisi</h2>
+<div class="container">
+<div class="col" style="width: 35%; font-size: 0.8em; vertical-align: center">
+<ol>
+<li>I sorgenti sono <strong>parsati</strong> $\rightarrow$ <em>Abstract Syntax Tree</em></li>
+<li>Fase intermedia di <em>preprocessing</em> in cui dall’albero vengono rimosse le dichiarazioni irrilevanti: commenti, dichiarazione di <code>import</code> e <code>package</code>, funzioni generate automaticamente dall&rsquo;IDE, come <code>hashCode()</code> e <code>equals()</code>.</li>
+<li>L&rsquo;albero viene visitato e vengono emessi i <em>token</em></li>
+</ol>
+</div>
+<div class="col" style="width: 80%;">
+<figure><img src="01-ast-summarized.svg" width="100%" height="100%"/>
+</figure>
+</div>
+</div>
+</section><section>
+<div class="container">
+<div class="col" style="margin-left: -7%">
+<h3 id="prima-dellanalisi">Prima dell&rsquo;analisi</h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span><span style="color:#a90d91">package</span> <span style="color:#000">org.examples</span><span style="color:#000">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">import</span> <span style="color:#000">java.util.Arrays</span><span style="color:#000">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#177500">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#177500"> * This is a sample class to demonstrate the tokenization process.
+</span></span></span><span style="display:flex;"><span><span style="color:#177500"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a90d91">public</span> <span style="color:#a90d91">class</span> <span style="color:#3f6e75">Main</span> <span style="color:#000">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a90d91">public</span> <span style="color:#a90d91">static</span> <span style="color:#a90d91">void</span> <span style="color:#000">main</span><span style="color:#000">(</span><span style="color:#000">String</span><span style="color:#000">[]</span> <span style="color:#000">args</span><span style="color:#000">)</span> <span style="color:#000">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a90d91">if</span> <span style="color:#000">(</span><span style="color:#000">args</span><span style="color:#000">.</span><span style="color:#836c28">length</span> <span style="color:#000">&gt;</span> <span style="color:#000">0</span><span style="color:#000">)</span> <span style="color:#000">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">System</span><span style="color:#000">.</span><span style="color:#836c28">out</span><span style="color:#000">.</span><span style="color:#836c28">println</span><span style="color:#000">(</span><span style="color:#c41a16">&#34;Program arguments: &#34;</span> <span style="color:#000">+</span> <span style="color:#000">Arrays</span><span style="color:#000">.</span><span style="color:#836c28">toString</span><span style="color:#000">(</span><span style="color:#000">args</span><span style="color:#000">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">}</span> <span style="color:#a90d91">else</span> <span style="color:#000">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#000">System</span><span style="color:#000">.</span><span style="color:#836c28">out</span><span style="color:#000">.</span><span style="color:#836c28">println</span><span style="color:#000">(</span><span style="color:#c41a16">&#34;Hello world from Java!&#34;</span><span style="color:#000">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#000">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#000">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#000">}</span>
+</span></span></code></pre></div></div>
+<div class="col">
+<span class='fragment ' >
+  <h3 id="dopo-la-_tokenizzazione_">Dopo la <em>tokenizzazione</em></h3>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span>[class-interface-decl (line=8, column=1), 
+</span></span><span style="display:flex;"><span>method-decl (line=9, column=5), 
+</span></span><span style="display:flex;"><span>parameter (line=9, column=29), 
+</span></span><span style="display:flex;"><span>block-stmt (line=9, column=44), 
+</span></span><span style="display:flex;"><span>if-stmt (line=10, column=9), 
+</span></span><span style="display:flex;"><span>binary-expr (line=10, column=13), 
+</span></span><span style="display:flex;"><span>field-access-expr (line=10, column=13), 
+</span></span><span style="display:flex;"><span>name-expr (line=10, column=13), 
+</span></span><span style="display:flex;"><span>literal-expr (line=10, column=27), 
+</span></span><span style="display:flex;"><span>block-stmt (line=10, column=30), 
+</span></span><span style="display:flex;"><span>expression-stmt (line=11, column=13), 
+</span></span><span style="display:flex;"><span>method-call-expr (line=11, column=13), 
+</span></span><span style="display:flex;"><span>field-access-expr (line=11, column=13), 
+</span></span><span style="display:flex;"><span>name-expr (line=11, column=13), 
+</span></span><span style="display:flex;"><span>binary-expr (line=11, column=32), 
+</span></span><span style="display:flex;"><span>literal-expr (line=11, column=32), 
+</span></span><span style="display:flex;"><span>method-call-expr (line=11, column=56), 
+</span></span><span style="display:flex;"><span>name-expr (line=11, column=56), 
+</span></span><span style="display:flex;"><span>name-expr (line=11, column=72), 
+</span></span><span style="display:flex;"><span>block-stmt (line=12, column=16), 
+</span></span><span style="display:flex;"><span>expression-stmt (line=13, column=13),
+</span></span><span style="display:flex;"><span>method-call-expr (line=13, column=13), 
+</span></span><span style="display:flex;"><span>field-access-expr (line=13, column=13), 
+</span></span><span style="display:flex;"><span>name-expr (line=13, column=13), 
+</span></span><span style="display:flex;"><span>literal-expr (line=13, column=32)]
+</span></span></code></pre></div>
+</span>
+</div>
+</div>
+</section><section>
+<h2 id="fase-di-filtraggio">Fase di filtraggio</h2>
+<p>A seguito dell’analisi del codice sorgente e della generazione della sequenza di token i sorgenti del corpus possono essere filtrati, al fine di limitare il numero di progetti da dover confrontare e, quindi, ridurre il tempo d&rsquo;esecuzione.</p>
+<ol>
+<li>Fase d’<em>indicizzazione</em> in cui vengono aggregati i dati sotto forma di una struttura dati per mezzo della quale è possibile estrarre informazioni statistiche significative per la stima della similarità</li>
+<li>&hellip;</li>
+</ol>
+</section><section>
+<h2 id="fase-di-confronto-delle-rappresentazione">Fase di confronto delle rappresentazione</h2>
+<ul>
+<li>vengono impiegati algoritmi di <em>string matching</em>, riadattati per operare su sequenze di <em>token</em>
+<ul>
+<li><em>Running Karp-Rabin Greedy String Tiling</em>, introdotto da M. Wise nel 1993, a seguito della necessità di sviluppare proprio un sistema automatico antiplagio, anche se negli anni successivi gli stessi algoritmi sono stati impiegati in altri campi, tra cui il confronto di sequenze di proteine/DNA.
+<ul>
+<li>Complessità: nel caso <strong>pessimo</strong> $O(n^2)$, nel caso <strong>medio</strong> &hellip;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</section><section>
+<h2 id="stima-di-similarità-tra-sorgenti">Stima di similarità tra sorgenti</h2>
+<p>&hellip;</p>
+</section><section>
+<h2 id="stima-di-similarità-tra-progetti">Stima di similarità tra progetti</h2>
+<p>&hellip;</p>
+</section><section>
+<h1 id="progettazione">Progettazione</h1>
+<ul>
+<li>I progetti, coerenti per linguaggio di programmazione, sono recuperati a partire da <em>repository</em> su <em>GitHub</em> e <em>Bitbucket</em>.</li>
+<li>Si assume che i progetti siano <strong>tempo-invarianti</strong> $\rightarrow$ vengono <em>cachati</em> in modo tale da poter essere riutilizzate in analisi successive.</li>
+<li>L&rsquo;architettura è stata concepita per essere <strong>estendibile</strong> e <strong>configurabile</strong> nella tecnica e nei parametri da poter utilizzare.</li>
+<li>&hellip;</li>
+</ul>
+</section><section>
+<h1 id="schema-architetturale">&lt;SCHEMA ARCHITETTURALE&gt;</h1>
+</section><section>
+<h1 id="risultati">RISULTATI</h1>
+</section><section>
+<h1 id="sviluppi-futuri">SVILUPPI FUTURI</h1>
+</section><section>
+<h1 id="esempio-di-report-generato-dallo-strumento">ESEMPIO DI REPORT GENERATO DALLO STRUMENTO</h1>
+</section><section>
+</div></section>
+
+  
+
+
+</div>
+      
+
+    </div>
+<script type="text/javascript" src=/code-plagiarism-detector-presentation/reveal-hugo/object-assign.js></script>
+
+<a href="/code-plagiarism-detector-presentation/reveal-js/dist/print/" id="print-location" style="display: none;"></a>
+
+<script type="application/json" id="reveal-hugo-site-params">{"custom_theme":"custom-theme.scss","custom_theme_compile":true,"custom_theme_options":{"enablesourcemap":true,"targetpath":"css/custom-theme.css"},"highlight_theme":"default","history":true,"mermaid":[{"startOnLoad":false}],"slide_number":true,"theme":"white","transition":"slide","transition_speed":"fast"}</script>
+<script type="application/json" id="reveal-hugo-page-params">null</script>
+
+<script src="/code-plagiarism-detector-presentation/reveal-js/dist/reveal.js"></script>
+
+
+  
+  
+  <script type="text/javascript" src="/code-plagiarism-detector-presentation/reveal-js/plugin/markdown/markdown.js"></script>
+  
+  <script type="text/javascript" src="/code-plagiarism-detector-presentation/reveal-js/plugin/highlight/highlight.js"></script>
+  
+  <script type="text/javascript" src="/code-plagiarism-detector-presentation/reveal-js/plugin/zoom/zoom.js"></script>
+  
+  <script type="text/javascript" src="/code-plagiarism-detector-presentation/reveal-js/plugin/notes/notes.js"></script>
+  
+  
+  <script type="text/javascript" src="/code-plagiarism-detector-presentation/reveal-js/plugin/notes/notes.js"></script>
+
+
+
+
+<script type="text/javascript">
+  
+  
+  function camelize(map) {
+    if (map) {
+      Object.keys(map).forEach(function(k) {
+        newK = k.replace(/(\_\w)/g, function(m) { return m[1].toUpperCase() });
+        if (newK != k) {
+          map[newK] = map[k];
+          delete map[k];
+        }
+      });
+    }
+    return map;
+  }
+  
+  var revealHugoDefaults = { center: true, controls: true, history: true, progress: true, transition: "slide" };
+
+  var revealHugoPlugins = { 
+    plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealZoom ]
+   };
+  var revealHugoSiteParams = JSON.parse(document.getElementById('reveal-hugo-site-params').innerHTML);
+  var revealHugoPageParams = JSON.parse(document.getElementById('reveal-hugo-page-params').innerHTML);
+  
+  var options = Object.assign({},
+    camelize(revealHugoDefaults),
+    camelize(revealHugoSiteParams),
+    camelize(revealHugoPageParams),
+    camelize(revealHugoPlugins));
+  Reveal.initialize(options);
+</script>
+
+
+
+
+
+
+
+
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@9.1.6/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({"startOnLoad":false});
+
+    let render = (event) => {
+      let mermaidElems = event.currentSlide.querySelectorAll('.mermaid');
+      if (!mermaidElems.length){
+          return
+      }
+      mermaidElems.forEach(mermaidElem => {
+          let processed = mermaidElem.getAttribute('data-processed');
+          if (!processed){
+              
+              mermaid.init(undefined, mermaidElem);
+          }
+      });
+    };
+    Reveal.addEventListener('slidechanged', render);
+    Reveal.addEventListener('ready', render);
+  </script>
+
+    <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']]
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+</script>
+
+<script type="text/javascript" id="MathJax-script" async
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js">
+</script>
+
+<script>
+  if (/.*?(\?|&)print-pdf/.test(window.location.toString())) {
+      var ytVideos = document.getElementsByTagName("iframe")
+      for (let i = 0; i < ytVideos.length; i++) {
+          var videoFrame = ytVideos[i]
+          var isYouTube = /^https?:\/\/(www.)youtube\.com\/.*/.test(videoFrame.src)
+          if (isYouTube) {
+              console.log(`Removing ${videoFrame.src}`)
+              var parent = videoFrame.parentElement
+              videoFrame.remove()
+              var p = document.createElement('p')
+              p.append(
+                  document.createTextNode(
+                      "There was an embedded video here, but it is disabled in the printed version of the slides."
+                  )
+              )
+              p.append(document.createElement('br'))
+              p.append(
+                  document.createTextNode(
+                      `Visit instead ${
+                          videoFrame.src
+                      } or ${
+                          videoFrame.src.replace(
+                              /(^https?:\/\/(www.)youtube\.com)\/(embed\/)(\w+).*/,
+                              "https://www.youtube.com/watch?v=$4"
+                          )
+                      }`
+                  )
+              )
+              parent.appendChild(p)
+          }
+      }
+  }
+</script>
+
+    
+  </body>
+</html>
