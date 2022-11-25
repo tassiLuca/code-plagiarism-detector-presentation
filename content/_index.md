@@ -204,7 +204,7 @@ flowchart TB
 
 # Il tool sviluppato
 
-- sviluppato in _Kotlin_, _open source_
+- sviluppato _ex novo_ in _Kotlin_, _open source_
 <div class="smaller">
 
 disponibile al link [git@github.com:DanySK/code-plagiarism-detector/](https://github.com/DanySK/code-plagiarism-detector.git) 
