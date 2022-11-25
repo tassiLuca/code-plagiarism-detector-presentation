@@ -11,7 +11,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/thesis-presentation/reveal-js/dist/reset.css">
 <link rel="stylesheet" href="/thesis-presentation/reveal-js/dist/reveal.css">
-  <link rel="stylesheet" href="/thesis-presentation/css/custom-theme.min.6f7f125b35c7fd924fbe307084262ac597218b02a4a066cf41ffedca4c8806e2.css" id="theme"><link rel="stylesheet" href="/thesis-presentation/highlight-js/default.min.css">
+  <link rel="stylesheet" href="/thesis-presentation/css/custom-theme.min.dfc688f549d8ebbee71f8c5fe52ccf6eb0be31269c2716edf677c82af4266556.css" id="theme"><link rel="stylesheet" href="/thesis-presentation/highlight-js/default.min.css">
     
 <link rel="stylesheet" href="https://gitcdn.link/repo/DanySK/css-blur-animation/master/blur.css">
 <link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
@@ -27,14 +27,14 @@
   
 
     <section data-noprocess>
-    <h4>Alma Mater Studiorum $\cdot$ Università di Bologna</h4>
-    <h6 style="font-size:0.8em;">Campus di Cesena</h6>
+    <h4 style="color:black">Alma Mater Studiorum $\cdot$ Università di Bologna</h4>
+    <h6 style="font-size:0.8em; color:black;">Campus di Cesena</h6>
     <hr/>
     <p style="font-size:0.8em;">Dipartimento di informatica $-$ Scienza e Ingegneria</p>
     <p style="font-size:0.8em;">Corso di Laurea in Ingegneria e Scienze Informatiche</p>
-    <h2 style="margin:1em 0"><a href="https://github.com/tassiLuca/bachelor-thesis/releases/latest">Progettazione e sviluppo di uno strumento per la scansione di progetti software alla ricerca di potenziali segni di plagio</a></h2>
+    <h2 style="margin:1em 0"><a href="https://github.com/tassiLuca/bachelor-thesis/releases/latest" style="color:#3457D5">Progettazione e sviluppo di uno strumento per la scansione di progetti software alla ricerca di potenziali segni di plagio</a></h2>
     <p style="font-size:0.8em; margin-bottom:0">Elaborato in</p>
-    <h6>PROGRAMMAZIONE A OGGETTI</h6>
+    <h6 style="color:black">PROGRAMMAZIONE A OGGETTI</h6>
     <div style="margin-top:1em;">
         <div style="width:50%; border-box:none; float: left">
             <p style="font-size:0.7em">Relatore</p>
@@ -56,11 +56,6 @@
 </ul>
 <p><strong>MA</strong></p>
 <p>Creare un software antiplagio è <em>complesso</em>!</p>
-</section><section>
-<h3 id="sistemi-antiplagio-automatici-e-loro-caratteristiche">Sistemi antiplagio automatici e loro caratteristiche</h3>
-<figure><img src="techniques.svg" width="90%" height="400"/>
-</figure>
-
 </section><section>
 <h2 id="requisiti-di-un-tool-antiplagio-moderno">Requisiti di un tool antiplagio moderno</h2>
 <div class="container">
@@ -87,9 +82,13 @@
 </figure>
 
 <div class="smaller">
-<p><strong>Tassonomia dei livelli di plagio di Faidhi &amp; Robinson (1987)</strong></p>
+<p><em>Tassonomia dei livelli di plagio di Faidhi &amp; Robinson (1987)</em></p>
 </div>
 </div>
+</section><section>
+<h3 id="sistemi-antiplagio-automatici-e-loro-caratteristiche">Sistemi antiplagio automatici e loro caratteristiche</h3>
+<figure><img src="techniques.svg" width="90%" height="400"/>
+</figure>
 </section><section>
 <div class="container">
 <div class="col" style="width: 50%; text-align: right">
@@ -99,22 +98,14 @@
 <div class="mermaid">flowchart TB
     sources[(Program Sources)] -- strings --> analysis[1. Analysis]
     analysis -- representations --> filtering[2. Filtering]
-    filtering -- filtered representations --> Detection[6.Detection]
+    filtering -- filtered representations --> Detection[3.Detection]
     Detection -- matches --> result(((Reports)))
 </div>
 
 </div>
 </div>
 </section><section>
-<h1 id="il-tool-sviluppato">Il tool sviluppato</h1>
-<ul>
-<li>permette di reperire i progetti da <em>repository</em> <em>GitHub</em> e <em>Bitbcuket</em></li>
-<li>effettua l&rsquo;analisi dei sorgenti utilizzando una tecnica <em>structure based</em></li>
-<li>genera un report testuale con la stima di similarità repo-to-repo e con le parti di codici individuate come simili</li>
-</ul>
-</section><section>
 <h3 id="fase-1-analisi">Fase 1: Analisi</h3>
-<p><strong>Scopo:</strong> trasformare i sorgenti in rappresentazioni confrontabili che astraggano dai dettagli del linguaggio</p>
 <div class="mermaid">flowchart TB
     subgraph analysis
     direction LR
@@ -126,12 +117,16 @@
 <ol>
 <li>I file sono <em>parsati</em> $\rightarrow$ è generato l&rsquo;<em>Abstract Syntax Tree</em></li>
 <li><em>Preprocessing</em>: l&rsquo;AST viene &ldquo;ripulito&rdquo; da dettagli insignificanti a livello semantico (commenti, dichiarazioni di <code>import</code>, <code>package</code>, &hellip;)</li>
-<li>L&rsquo;AST viene visitato e vengono &ldquo;emessi&rdquo; i <em>token</em> corrispondenti ai costrutti del linguaggio da valorizzare</li>
+<li>L&rsquo;AST viene visitato e vengono &ldquo;emessi&rdquo; i <em>token</em> corrispondenti ai costrutti del linguaggio da valorizzare
+<ul>
+<li>⚠️ la scelta dei tipi di token è un fattore critico</li>
+</ul>
+</li>
 </ol>
 </section><section>
 <div class="container">
 <div class="col" style="margin-left: -7%">
-<p><strong>Prima dell&rsquo;analisi</strong></p>
+<p>Prima dell&rsquo;analisi</p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span><span style="color:#a90d91">package</span> <span style="color:#000">org.examples</span><span style="color:#000">;</span>
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span><span style="color:#a90d91">import</span> <span style="color:#000">java.util.Arrays</span><span style="color:#000">;</span>
@@ -151,7 +146,7 @@
 </span></span></code></pre></div></div>
 <div class="col">
 <span class='fragment ' >
-  <p><strong>Dopo la <em>tokenizzazione</em></strong></p>
+  <p>Dopo la <em>tokenizzazione</em></p>
 <div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span>[class-interface-decl (line=8, column=1), 
 </span></span><span style="display:flex;"><span>method-decl (line=9, column=5), 
 </span></span><span style="display:flex;"><span>parameter (line=9, column=29), 
@@ -183,7 +178,6 @@
 </div>
 </section><section>
 <h3 id="fase-2-filtraggio">Fase 2: Filtraggio</h3>
-<p><strong>Scopo:</strong> limitare il numero di confronti $\Rightarrow$ migliorare le prestazioni</p>
 <div style="padding: 0 20%">
 <div class="mermaid">flowchart TB
     subgraph filtering[filtering]
@@ -198,26 +192,100 @@
 </ol>
 <span class='fragment ' >
   <h3 id="fase-3-detection">Fase 3: Detection</h3>
-<p>Sono applicati algoritmi di <em>string matching</em>, riadattati per funzionare su sequenze di token.</p>
+<p>È applicato un algoritmo di <em>string matching</em>, riadattato per funzionare su sequenze di token $\Rightarrow$ ⚠️ fase più onerosa in termini di tempo di calcolo</p>
 </span>
 </section><section>
-<h2 id="configurabilità-del-tool">Configurabilità del tool</h2>
+<h1 id="il-tool-sviluppato">Il tool sviluppato</h1>
 <ul>
-<li>interfaccia a riga di comando che permette la configurazione:
+<li>permette di reperire i progetti da <em>repository</em> <em>GitHub</em> e <em>Bitbcuket</em></li>
+</ul>
+<span class='fragment ' >
+  <ul>
+<li>genera un report testuale con la stima di similarità <em>repo-to-repo</em> e con le parti di codice simili</li>
+</ul>
+</span>
+<span class='fragment ' >
+  <ul>
+<li>è estendibili nel tipo di tecnica impiegata</li>
+</ul>
+</span>
+<span class='fragment ' >
+  <ul>
+<li>è configurabile:
 <ul>
 <li>lunghezza minima della sequenza di <em>token</em> che dovrebbe essere riportata</li>
 <li>soglia di similarità tra sorgenti ($ 0. \div 1.$)</li>
 <li>soglia di filtraggio dei sorgenti ($ 0. \div 1.$)</li>
+<li>esclusione di alcuni file ritenuti non rilevanti e di comune utilizzo (i.e. <code>Pair.java</code>)</li>
 </ul>
 </li>
 </ul>
+</span>
 </section><section>
 <h2 id="esempio-di-output">Esempio di output</h2>
-</section><section>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span>******************************************************************
+</span></span><span style="display:flex;"><span>Report from plagiarism detector tool generated at 2022-11-13T17...
+</span></span><span style="display:flex;"><span>******************************************************************
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>Submitted Project: 7d79ff     
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>+++++++++++++++++++++++++++++ SUMMARY ++++++++++++++++++++++++++++
+</span></span><span style="display:flex;"><span>Compared with 354 repositories.
+</span></span><span style="display:flex;"><span>------------------------------------------------------------------
+</span></span><span style="display:flex;"><span>|compared with                                        |similarity|
+</span></span><span style="display:flex;"><span>------------------------------------------------------------------
+</span></span><span style="display:flex;"><span>|ac8a48                                               |      0.81|
+</span></span><span style="display:flex;"><span>|929c18                                               |      0.10|
+</span></span><span style="display:flex;"><span>|2b58aa                                               |      0.08|
+</span></span><span style="display:flex;"><span>|                             ...                                |
+</span></span><span style="display:flex;"><span>------------------------------------------------------------------
+</span></span><span style="display:flex;"><span>++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+</span></span></code></pre></div></section><section>
+<div class="highlight"><pre tabindex="0" style="background-color:#fff;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="nohighlight" data-noescape><span style="display:flex;"><span>&gt; Matches found with ac8a48
+</span></span><span style="display:flex;"><span>                              ...
+</span></span><span style="display:flex;"><span>&gt;&gt; With similarity: 0.8655737704918033
+</span></span><span style="display:flex;"><span>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+</span></span><span style="display:flex;"><span>[7d79ff/src/main/java/*/ShotManagerImpl.java]
+</span></span><span style="display:flex;"><span>        this.zombieModel.getZombies().stream()
+</span></span><span style="display:flex;"><span>            .filter(z -&gt; Collision.isColliding(s.getBoundingBox(), z.getBoundingBox()))
+</span></span><span style="display:flex;"><span>            .forEach(z -&gt; {
+</span></span><span style="display:flex;"><span>                this.zombieModel.hitZombie(z, s.getDamage());
+</span></span><span style="display:flex;"><span>                delete.add(s);
+</span></span><span style="display:flex;"><span>            });
+</span></span><span style="display:flex;"><span>        if(!delete.contains(s) &amp;&amp; this.walls.stream().anyMatch(w -&gt; Collision.isColliding(w, s.getBoundingBox()))) {
+</span></span><span style="display:flex;"><span>            delete.add(s);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    this.ended.addAll(delete);
+</span></span><span style="display:flex;"><span>    delete.forEach(s -&gt; this.shotsActive.remove(s));
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+</span></span><span style="display:flex;"><span>[ac8a48/src/main/java/*/AttackManagerImpl.java]
+</span></span><span style="display:flex;"><span>            this.zombieModel.getZombies().stream()
+</span></span><span style="display:flex;"><span>                .filter(z -&gt; CollisionsUtils.isColliding(z.getBBox(), a.getBBox()))
+</span></span><span style="display:flex;"><span>                .forEach(z -&gt; {
+</span></span><span style="display:flex;"><span>                    this.zombieModel.hitZombie(z, a.getDamage());
+</span></span><span style="display:flex;"><span>                    toDelete.add(a);
+</span></span><span style="display:flex;"><span>                });
+</span></span><span style="display:flex;"><span>            if (!toDelete.contains(a) &amp;&amp; this.obstacles.stream().anyMatch(e -&gt; CollisionsUtils.isColliding(e, a.getBBox()))) {
+</span></span><span style="display:flex;"><span>                toDelete.add(a);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    this.deleted.addAll(toDelete);
+</span></span><span style="display:flex;"><span>    toDelete.forEach(a -&gt; this.attacksActive.remove(a));
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>...
+</span></span><span style="display:flex;"><span>&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+</span></span></code></pre></div></section><section>
 <h1 id="validazione-dei-risultati">Validazione dei risultati</h1>
 <ul>
-<li><strong>submission set</strong>: 130 progetti universitari sviluppati in Java nel triennio 2019-21</li>
-<li><strong>corpus set</strong>: +354 progetti sottomessi nello stesso corso (2015-)
+<li><em>submission set</em>: 130 progetti universitari sviluppati in Java nel triennio 2019-21</li>
+<li><em>corpus set</em>: +354 progetti sottomessi nello stesso corso (2015-)
 <ul>
 <li>confronto a &ldquo;prodotto cartesiano&rdquo;</li>
 </ul>
@@ -229,10 +297,10 @@
 <table>
 <thead>
 <tr>
-<th><strong>Progetto originale</strong></th>
-<th><strong>Progetto copiato</strong></th>
-<th><strong>Similarità</strong></th>
-<th><strong>Ispezione manuale</strong></th>
+<th><em>Progetto originale</em></th>
+<th><em>Progetto copiato</em></th>
+<th><em>Similarità</em></th>
+<th><em>Ispezione manuale</em></th>
 </tr>
 </thead>
 <tbody>
@@ -287,10 +355,11 @@
 </tbody>
 </table>
 </div>
+<h2 id="analisi-di-sensibilità">Analisi di sensibilità</h2>
+<p>Stime di similarità fuorvianti in corrispondenza di <code>getter</code>/<code>setter</code> e in corrispondenza di numerose costanti $\Rightarrow$ taratura delle metriche di stima delle similarità e del set di <em>token</em></p>
 </section><section>
 <h1 id="heading">🙏</h1>
 <h3 id="grazie-per-lattenzione">Grazie per l&rsquo;attenzione!</h3>
-</section><section>
 </div></section>
 
   
