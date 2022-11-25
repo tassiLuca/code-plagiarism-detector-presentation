@@ -197,8 +197,16 @@
 </section><section>
 <h1 id="il-tool-sviluppato">Il tool sviluppato</h1>
 <ul>
-<li>permette di reperire i progetti da <em>repository</em> <em>GitHub</em> e <em>Bitbcuket</em></li>
+<li>sviluppato in <em>Kotlin</em>, <em>open source</em></li>
 </ul>
+<div class="smaller">
+<p>disponibile al link <a href="https://github.com/DanySK/code-plagiarism-detector.git">git@github.com:DanySK/code-plagiarism-detector/</a></p>
+</div>
+<span class='fragment ' >
+  <ul>
+<li>permette di reperire i progetti da <em>repository</em> <em>GitHub</em> e <em>Bitbucket</em></li>
+</ul>
+</span>
 <span class='fragment ' >
   <ul>
 <li>genera un report testuale con la stima di similarità <em>repo-to-repo</em> e con le parti di codice simili</li>
@@ -213,10 +221,10 @@
   <ul>
 <li>è configurabile:
 <ul>
-<li>lunghezza minima della sequenza di <em>token</em> che dovrebbe essere riportata</li>
-<li>soglia di similarità tra sorgenti ($ 0. \div 1.$)</li>
-<li>soglia di filtraggio dei sorgenti ($ 0. \div 1.$)</li>
-<li>esclusione di alcuni file ritenuti non rilevanti e di comune utilizzo (i.e. <code>Pair.java</code>)</li>
+<li>lunghezza minima della sequenza di <em>token</em> da riportare</li>
+<li>soglia di similarità tra sorgenti ([0, 1])</li>
+<li>soglia di filtraggio dei sorgenti ([0, 1])</li>
+<li>esclusione di file ritenuti non rilevanti/comune utilizzo (e.g. <code>Pair.java</code>)</li>
 </ul>
 </li>
 </ul>
@@ -284,12 +292,14 @@
 </span></span></code></pre></div></section><section>
 <h1 id="validazione-dei-risultati">Validazione dei risultati</h1>
 <ul>
-<li><em>submission set</em>: 130 progetti universitari sviluppati in Java nel triennio 2019-21</li>
-<li><em>corpus set</em>: +354 progetti sottomessi nello stesso corso (2015-)
+<li><em>corpus set</em>: 354 progetti amatoriali sviluppati in Java disponibili su GitHub
 <ul>
-<li>confronto a &ldquo;prodotto cartesiano&rdquo;</li>
+<li>nessuno dei quali &ldquo;copia nota&rdquo; (ad esempio, fork)</li>
 </ul>
 </li>
+<li><em>submission set</em>: una selezione di 130 dei sopra-citati progetti</li>
+<li>confronto con prodotto cartesiano</li>
+<li>🫢 i nomi dei software sono stati anonimizzati per rispetto della <em>privacy</em></li>
 </ul>
 </section><section>
 <h3 id="analisi-di-sensitività">Analisi di sensitività</h3>
@@ -356,9 +366,25 @@
 </table>
 </div>
 <h3 id="analisi-di-sensibilità">Analisi di sensibilità</h3>
-<p>Stime di similarità fuorvianti in corrispondenza di <code>getter</code>/<code>setter</code> e in corrispondenza di numerose costanti $\Rightarrow$ taratura delle metriche di stima delle similarità e del set di <em>token</em></p>
+<p>Stime di similarità fuorvianti in corrispondenza di <code>getter</code>/<code>setter</code> e in corrispondenza di numerose costanti.</p>
 </section><section>
-<h1 id="heading">🙏</h1>
+<h2 id="sviluppi-futuri">Sviluppi futuri</h2>
+<ul>
+<li>a &ldquo;stretto giro&rdquo;:
+<ul>
+<li>tarare le metriche per stimare la similarità</li>
+</ul>
+</li>
+<li>di &ldquo;lungo respiro&rdquo;:
+<ul>
+<li>aggiungere un&rsquo;interfaccia grafica</li>
+<li>generare report, ad esempio HTML, con una formattazione migliorata tipica di un IDE.</li>
+<li>aggiungere tecniche di <em>clustering</em> a seguito della comparazione dei sorgenti per individuare con maggior precisione addensamenti di sorgenti duplicati</li>
+</ul>
+</li>
+</ul>
+</section><section>
+<h1 id="heading">🙏👋</h1>
 <h2 id="grazie-per-lattenzione">Grazie per l&rsquo;attenzione!</h2>
 </div></section>
 
