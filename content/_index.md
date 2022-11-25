@@ -203,7 +203,17 @@ flowchart TB
 ---
 
 # Il tool sviluppato
-- permette di reperire i progetti da _repository_ _GitHub_ e _Bitbcuket_
+
+- sviluppato in _Kotlin_, _open source_
+<div class="smaller">
+
+disponibile al link [git@github.com:DanySK/code-plagiarism-detector/](https://github.com/DanySK/code-plagiarism-detector.git) 
+
+</div>
+
+{{% fragment %}}
+- permette di reperire i progetti da _repository_ _GitHub_ e _Bitbucket_
+{{% /fragment %}}
 
 {{% fragment %}}
 - genera un report testuale con la stima di similarità _repo-to-repo_ e con le parti di codice simili
@@ -215,10 +225,10 @@ flowchart TB
 
 {{% fragment %}}
 - è configurabile:
-  - lunghezza minima della sequenza di _token_ che dovrebbe essere riportata
-  - soglia di similarità tra sorgenti ($ 0. \div 1.$)
-  - soglia di filtraggio dei sorgenti ($ 0. \div 1.$)
-  - esclusione di alcuni file ritenuti non rilevanti e di comune utilizzo (i.e. `Pair.java`)
+  - lunghezza minima della sequenza di _token_ da riportare
+  - soglia di similarità tra sorgenti ([0, 1])
+  - soglia di filtraggio dei sorgenti ([0, 1])
+  - esclusione di file ritenuti non rilevanti/comune utilizzo (e.g. `Pair.java`)
 {{% /fragment %}}
 
 ---
@@ -294,9 +304,11 @@ Compared with 354 repositories.
 
 # Validazione dei risultati
 
-- _submission set_: 130 progetti universitari sviluppati in Java nel triennio 2019-21
-- _corpus set_: +354 progetti sottomessi nello stesso corso (2015-) 
-  - confronto a "prodotto cartesiano"
+- _corpus set_: 354 progetti amatoriali sviluppati in Java disponibili su GitHub
+  - nessuno dei quali "copia nota" (ad esempio, fork) 
+- _submission set_: una selezione di 130 dei sopra-citati progetti
+- confronto con prodotto cartesiano
+- 🫢 i nomi dei software sono stati anonimizzati per rispetto della _privacy_
 
 ---
 
@@ -318,9 +330,19 @@ Compared with 354 repositories.
 </div>
 
 ### Analisi di sensibilità
-Stime di similarità fuorvianti in corrispondenza di `getter`/`setter` e in corrispondenza di numerose costanti $\Rightarrow$ taratura delle metriche di stima delle similarità e del set di _token_
+Stime di similarità fuorvianti in corrispondenza di `getter`/`setter` e in corrispondenza di numerose costanti.
 
 ---
 
-# 🙏
+## Sviluppi futuri
+- a "stretto giro":
+  - tarare le metriche per stimare la similarità
+- di "lungo respiro":
+  - aggiungere un'interfaccia grafica
+  - generare report, ad esempio HTML, con una formattazione migliorata tipica di un IDE.
+  - aggiungere tecniche di _clustering_ a seguito della comparazione dei sorgenti per individuare con maggior precisione addensamenti di sorgenti duplicati
+
+---
+
+# 🙏👋
 ## Grazie per l'attenzione!
