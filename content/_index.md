@@ -210,7 +210,7 @@ flowchart TB
 {{% /fragment %}}
 
 {{% fragment %}}
-- è estendibili nel tipo di tecnica impiegata
+- è estendibile nel tipo di tecnica impiegata
 {{% /fragment %}}
 
 {{% fragment %}}
@@ -300,7 +300,7 @@ Compared with 354 repositories.
 
 ---
 
-## Analisi di sensitività
+### Analisi di sensitività
 
 <div class="smaller">
 
@@ -317,10 +317,10 @@ Compared with 354 repositories.
 
 </div>
 
-## Analisi di sensibilità
+### Analisi di sensibilità
 Stime di similarità fuorvianti in corrispondenza di `getter`/`setter` e in corrispondenza di numerose costanti $\Rightarrow$ taratura delle metriche di stima delle similarità e del set di _token_
 
 ---
 
 # 🙏
-### Grazie per l'attenzione!
+## Grazie per l'attenzione!
