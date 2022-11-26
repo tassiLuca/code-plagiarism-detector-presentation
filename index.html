@@ -11,9 +11,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="/thesis-presentation/reveal-js/dist/reset.css">
 <link rel="stylesheet" href="/thesis-presentation/reveal-js/dist/reveal.css">
-  <link rel="stylesheet" href="/thesis-presentation/css/custom-theme.min.75dcd91a42ee22038d69d229695133eaf61aae270a60b2193806d44f6de9ea11.css" id="theme"><link rel="stylesheet" href="/thesis-presentation/highlight-js/default.min.css">
+  <link rel="stylesheet" href="/thesis-presentation/css/custom-theme.min.3b40d95766b5b6ccb4d15d1b57254976d2af39876614bb4b80fe9468fb513d94.css" id="theme"><link rel="stylesheet" href="/thesis-presentation/highlight-js/default.min.css">
     
-<link rel="stylesheet" href="https://gitcdn.link/repo/DanySK/css-blur-animation/master/blur.css">
 <link href='https://fonts.googleapis.com/css?family=Roboto Mono' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Oxygen Mono' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Ubuntu Mono' rel='stylesheet'>
@@ -52,10 +51,12 @@
 <li>problema annoso e in continua crescita</li>
 <li>ha visto, nel corso degli anni, numerosi scontri legali, i.e. Oracle vs. Google per Android</li>
 <li>farlo manualmente è impraticabile $\Rightarrow$ è necessario un tool <em>automatico</em></li>
-<li>sono pochi i progetti <em>open source</em> di facile utilizzo</li>
 </ul>
 <p><strong>MA</strong></p>
-<p>Creare un software antiplagio è <em>complesso</em>!</p>
+<ul>
+<li>sono pochi i progetti <em>open source</em> di facile utilizzo</li>
+<li>Creare un software antiplagio è <em>complesso</em>!</li>
+</ul>
 </section><section>
 <h2 id="requisiti-di-un-tool-antiplagio-moderno">Requisiti di un tool antiplagio moderno</h2>
 <div class="container">
@@ -82,7 +83,7 @@
 </figure>
 
 <div class="smaller">
-<p><em>Tassonomia dei livelli di plagio di Faidhi &amp; Robinson (1987)</em></p>
+<p><em><a href="https://www.sciencedirect.com/science/article/pii/036013158790042X">Tassonomia dei livelli di plagio di Faidhi &amp; Robinson (1987)</a></em></p>
 </div>
 </div>
 </section><section>
@@ -177,8 +178,9 @@
 </div>
 </div>
 </section><section>
+<div class="container">
+<div class="col medium" style="padding: 0 2% 0 0">
 <h3 id="fase-2-filtraggio">Fase 2: Filtraggio</h3>
-<div style="padding: 0 20%">
 <div class="mermaid">flowchart TB
     subgraph filtering[filtering]
         direction LR
@@ -186,14 +188,18 @@
     end
 </div>
 
+<p>Le rappresentazioni (sequenze di <em>token</em>) sono aggregate sotto forma di strutture dati dalla quali è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità</p>
 </div>
-<ol>
-<li>Le rappresentazioni (sequenze di <em>token</em>) sono aggregate sotto forma di strutture dati dalla quali è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità</li>
-</ol>
+<div class="col medium" style="padding: 0 0 0 2%">
 <span class='fragment ' >
   <h3 id="fase-3-detection">Fase 3: Detection</h3>
-<p>È applicato un algoritmo di <em>string matching</em>, riadattato per funzionare su sequenze di token $\Rightarrow$ ⚠️ fase più onerosa in termini di tempo di calcolo</p>
+<ul>
+<li>È applicato un algoritmo di <em>string matching</em> (<a href="https://www.researchgate.net/profile/Michael_Wise/publication/262763983_String_Similarity_via_Greedy_String_Tiling_and_Running_Karp-Rabin_Matching/links/59f03226aca272a2500141f4/String-Similarity-via-Greedy-String-Tiling-and-Running-Karp-Rabin-Matching.pdf">RKR-GST, 1993</a>), riadattato per funzionare su sequenze di token</li>
+<li>⚠️ fase più onerosa in termini di tempo di calcolo $\Rightarrow$ <strong>esecuzione concorrente</strong></li>
+</ul>
 </span>
+</div>
+</div>
 </section><section>
 <h1 id="il-tool-sviluppato">Il tool sviluppato</h1>
 <ul>
