@@ -32,11 +32,11 @@ outputs = ["Reveal"]
 - problema annoso e in continua crescita
 - ha visto, nel corso degli anni, numerosi scontri legali, i.e. Oracle vs. Google per Android 
 - farlo manualmente è impraticabile $\Rightarrow$ è necessario un tool _automatico_
-- sono pochi i progetti _open source_ di facile utilizzo
 
 **MA**
 
-Creare un software antiplagio è _complesso_!
+- sono pochi i progetti _open source_ di facile utilizzo
+- Creare un software antiplagio è _complesso_!
 
 ---
 
@@ -59,7 +59,7 @@ Creare un software antiplagio è _complesso_!
 {{< figure src="levels-of-plagiarism.svg" width="95%" >}}
 
 {{% smaller %}}
-_Tassonomia dei livelli di plagio di Faidhi & Robinson (1987)_
+_[Tassonomia dei livelli di plagio di Faidhi & Robinson (1987)](https://www.sciencedirect.com/science/article/pii/036013158790042X)_
 
 </div>
 </div>
@@ -177,9 +177,10 @@ literal-expr (line=13, column=32)]
 
 ---
 
-### Fase 2: Filtraggio
+<div class="container">
+<div class="col medium" style="padding: 0 2% 0 0">
 
-<div style="padding: 0 20%">
+### Fase 2: Filtraggio
 
 ```mermaid
 flowchart TB
@@ -189,16 +190,21 @@ flowchart TB
     end
 ```
 
-</div>
+Le rappresentazioni (sequenze di _token_) sono aggregate sotto forma di strutture dati dalla quali è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità
 
-1. Le rappresentazioni (sequenze di _token_) sono aggregate sotto forma di strutture dati dalla quali è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità
+</div>
+<div class="col medium" style="padding: 0 0 0 2%">
 
 {{% fragment %}}
 
 ### Fase 3: Detection
-È applicato un algoritmo di _string matching_, riadattato per funzionare su sequenze di token $\Rightarrow$ ⚠️ fase più onerosa in termini di tempo di calcolo
+- È applicato un algoritmo di _string matching_ ([RKR-GST, 1993](https://www.researchgate.net/profile/Michael_Wise/publication/262763983_String_Similarity_via_Greedy_String_Tiling_and_Running_Karp-Rabin_Matching/links/59f03226aca272a2500141f4/String-Similarity-via-Greedy-String-Tiling-and-Running-Karp-Rabin-Matching.pdf)), riadattato per funzionare su sequenze di token 
+-  ⚠️ fase più onerosa in termini di tempo di calcolo $\Rightarrow$ **esecuzione concorrente**
 
 {{% /fragment %}}
+
+</div>
+</div>
 
 ---
 
