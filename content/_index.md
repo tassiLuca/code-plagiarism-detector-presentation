@@ -36,7 +36,7 @@ outputs = ["Reveal"]
 **MA**
 
 - sono pochi i progetti _open source_ di facile utilizzo
-- Creare un software antiplagio è _complesso_!
+- creare un software antiplagio è _complesso_!
 
 ---
 
@@ -199,7 +199,7 @@ Le rappresentazioni (sequenze di _token_) sono aggregate sotto forma di struttur
 
 ### Fase 3: Detection
 - È applicato un algoritmo di _string matching_ ([RKR-GST, 1993](https://www.researchgate.net/profile/Michael_Wise/publication/262763983_String_Similarity_via_Greedy_String_Tiling_and_Running_Karp-Rabin_Matching/links/59f03226aca272a2500141f4/String-Similarity-via-Greedy-String-Tiling-and-Running-Karp-Rabin-Matching.pdf)), riadattato per funzionare su sequenze di token 
--  ⚠️ fase più onerosa in termini di tempo di calcolo $\Rightarrow$ **esecuzione concorrente**
+-  ⚠️ fase più onerosa in termini di tempo di calcolo $\Rightarrow$ **esecuzione parallela**
 
 {{% /fragment %}}
 
