@@ -177,10 +177,9 @@ literal-expr (line=13, column=32)]
 
 ---
 
-<div class="container">
-<div class="col medium" style="padding: 0 2% 0 0">
-
 ### Fase 2: Filtraggio
+
+<div style="padding: 0 20%">
 
 ```mermaid
 flowchart TB
@@ -190,21 +189,64 @@ flowchart TB
     end
 ```
 
-Le rappresentazioni (sequenze di _token_) sono aggregate sotto forma di strutture dati dalla quali è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità
-
 </div>
-<div class="col medium" style="padding: 0 0 0 2%">
 
-{{% fragment %}}
+- i token sono indicizzati in coppie chiave-valore
+  - chiavi: tipi di token
+  - valore: frequenza (numero di occorrenze all'interno del sorgente)
+- **similarità coseno**
+
+---
+
+Similarità coseno
+
+---
 
 ### Fase 3: Detection
 - È applicato un algoritmo di _string matching_ ([RKR-GST, 1993](https://www.researchgate.net/profile/Michael_Wise/publication/262763983_String_Similarity_via_Greedy_String_Tiling_and_Running_Karp-Rabin_Matching/links/59f03226aca272a2500141f4/String-Similarity-via-Greedy-String-Tiling-and-Running-Karp-Rabin-Matching.pdf)), riadattato per funzionare su sequenze di token 
--  ⚠️ fase più onerosa in termini di tempo di calcolo $\Rightarrow$ **esecuzione parallela**
+-  ⚠️ fase più onerosa computazionalmente $\Rightarrow$ **esecuzione parallela**
+   -  complessità che, nel caso pessimo, $O(n^2)$
 
-{{% /fragment %}}
+---
+
+# Metriche
+## Come vengono stimate le similarità?
+
+---
+
+## Similarità tra coppie di sorgenti
+
+$$
+\text{max_sim_s} = \frac{\sum_{match \in tiles} length}{min(|A|,|B|)}
+$$
+
+❌ se i sorgenti confrontati hanno dimensione (in numero di token) molto diversa la stima è fuorviante
+
+<div style="border: 2px dashed crimson">
+
+$$
+\text{avg_sim_s} = \frac{2 \cdot \sum_{match \in tiles} length}{|A|+|B|}
+$$
+
+❌ se i sorgenti sono molti grandi (in numero di token) molto diversa la stima è fuorviante
 
 </div>
-</div>
+
+---
+
+## Similarità tra coppie di progetti
+
+La similarità tra due progetti, $A$ e $B$, è data da:
+
+$$
+sim_p(A, B) = max \biggl( \frac{|\text{reported sources of A}|}{|\text{sources of A}|}, \frac{|\text{reported sources of B|}}{|\text{sources of B}|} \biggl)
+$$
+
+$$
+\cdot P_{75}(\text{similarity of reported sources})
+$$
+
+dove $P_{75}$ è il 75° percentile (o 3° quartile) delle similarità dei sorgenti segnalati.
 
 ---
 
@@ -226,14 +268,10 @@ disponibile al link [git@github.com:DanySK/code-plagiarism-detector/](https://gi
 {{% /fragment %}}
 
 {{% fragment %}}
-- è estendibile nel tipo di tecnica impiegata
-{{% /fragment %}}
-
-{{% fragment %}}
 - è configurabile:
-  - lunghezza minima della sequenza di _token_ da riportare
-  - soglia di similarità tra sorgenti ([0, 1])
-  - soglia di filtraggio dei sorgenti ([0, 1])
+  - lunghezza minima della sequenza di _token_ da riportare (`min-tokens`)
+  - soglia di similarità tra sorgenti (`min-duplication` $\in [0, 1]$)
+  - soglia di filtraggio dei sorgenti (`threshold-filter` $\in [0, 1]$)
   - esclusione di file ritenuti non rilevanti/comune utilizzo (e.g. `Pair.java`)
 {{% /fragment %}}
 
@@ -337,6 +375,35 @@ Compared with 354 repositories.
 
 ### Analisi di sensibilità
 Stime di similarità fuorvianti in corrispondenza di `getter`/`setter` e in corrispondenza di numerose costanti.
+
+---
+
+togliendo le costanti enum, l'ultimo falso positivo cala drasticamente la similarità
+
+---
+
+## Confronto con `compare50`
+
+<div class="smaller">
+
+[progetto GitHub](https://github.com/cs50/compare50) | [documentazione](https://cs50.readthedocs.io/projects/compare50/en/latest/index.html)
+
+</div>
+
+- Harvard, 2018
+- implementa 5 tipi di confronto:
+  - 😊 **strutturale** (default `ON`): tokenizzazione + [Winnowing](https://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf)
+  - 😑 **testuale** (default `ON`): rimozione degli spazi + Winnowing
+  - 😑 **letterale** (default `ON`): Winnowing
+  - 😑 _senza commenti_ (default `OFF`): rimuove i commenti (ma tiene gli spazi) + Winnowing
+  - 😯😑 _"misspellings"_ (default `OFF`): confronta i commenti per parole inglesi con errori di ortografia identici.
+
+---
+
+| _PRO_  |  _**CONTRO**_ |
+|---|---|---|---|---|
+|riesce a confrontare un numero molto elevato di progetti in breve tempo (entro l'ora)|i _report_ non sono ordinati per sorgente più simile|
+||sono considerati le dichiarazioni di `import`, `package`|
 
 ---
 
