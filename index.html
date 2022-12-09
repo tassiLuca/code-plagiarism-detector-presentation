@@ -178,9 +178,8 @@
 </div>
 </div>
 </section><section>
-<div class="container">
-<div class="col medium" style="padding: 0 2% 0 0">
 <h3 id="fase-2-filtraggio">Fase 2: Filtraggio</h3>
+<div style="padding: 0 20%">
 <div class="mermaid">flowchart TB
     subgraph filtering[filtering]
         direction LR
@@ -188,18 +187,53 @@
     end
 </div>
 
-<p>Le rappresentazioni (sequenze di <em>token</em>) sono aggregate sotto forma di strutture dati dalla quali è possibile estrarre informazioni statistiche sulla base delle quali viene stimata la similarità</p>
 </div>
-<div class="col medium" style="padding: 0 0 0 2%">
-<span class='fragment ' >
-  <h3 id="fase-3-detection">Fase 3: Detection</h3>
+<ul>
+<li>i token sono indicizzati in coppie chiave-valore
+<ul>
+<li>chiavi: tipi di token</li>
+<li>valore: frequenza (numero di occorrenze all&rsquo;interno del sorgente)</li>
+</ul>
+</li>
+<li><strong>similarità coseno</strong></li>
+</ul>
+</section><section>
+<p>Similarità coseno</p>
+</section><section>
+<h3 id="fase-3-detection">Fase 3: Detection</h3>
 <ul>
 <li>È applicato un algoritmo di <em>string matching</em> (<a href="https://www.researchgate.net/profile/Michael_Wise/publication/262763983_String_Similarity_via_Greedy_String_Tiling_and_Running_Karp-Rabin_Matching/links/59f03226aca272a2500141f4/String-Similarity-via-Greedy-String-Tiling-and-Running-Karp-Rabin-Matching.pdf">RKR-GST, 1993</a>), riadattato per funzionare su sequenze di token</li>
-<li>⚠️ fase più onerosa in termini di tempo di calcolo $\Rightarrow$ <strong>esecuzione parallela</strong></li>
+<li>⚠️ fase più onerosa computazionalmente $\Rightarrow$ <strong>esecuzione parallela</strong>
+<ul>
+<li>complessità che, nel caso pessimo, $O(n^2)$</li>
 </ul>
-</span>
+</li>
+</ul>
+</section><section>
+<h1 id="metriche">Metriche</h1>
+<h2 id="come-vengono-stimate-le-similarità">Come vengono stimate le similarità?</h2>
+</section><section>
+<h2 id="similarità-tra-coppie-di-sorgenti">Similarità tra coppie di sorgenti</h2>
+<p>$$
+\text{max_sim_s} = \frac{\sum_{match \in tiles} length}{min(|A|,|B|)}
+$$</p>
+<p>❌ se i sorgenti confrontati hanno dimensione (in numero di token) molto diversa la stima è fuorviante</p>
+<div style="border: 2px dashed crimson">
+<p>$$
+\text{avg_sim_s} = \frac{2 \cdot \sum_{match \in tiles} length}{|A|+|B|}
+$$</p>
+<p>❌ se i sorgenti sono molti grandi (in numero di token) molto diversa la stima è fuorviante</p>
 </div>
-</div>
+</section><section>
+<h2 id="similarità-tra-coppie-di-progetti">Similarità tra coppie di progetti</h2>
+<p>La similarità tra due progetti, $A$ e $B$, è data da:</p>
+<p>$$
+sim_p(A, B) = max \biggl( \frac{|\text{reported sources of A}|}{|\text{sources of A}|}, \frac{|\text{reported sources of B|}}{|\text{sources of B}|} \biggl)
+$$</p>
+<p>$$
+\cdot P_{75}(\text{similarity of reported sources})
+$$</p>
+<p>dove $P_{75}$ è il 75° percentile (o 3° quartile) delle similarità dei sorgenti segnalati.</p>
 </section><section>
 <h1 id="il-tool-sviluppato">Il tool sviluppato</h1>
 <ul>
@@ -220,16 +254,11 @@
 </span>
 <span class='fragment ' >
   <ul>
-<li>è estendibile nel tipo di tecnica impiegata</li>
-</ul>
-</span>
-<span class='fragment ' >
-  <ul>
 <li>è configurabile:
 <ul>
-<li>lunghezza minima della sequenza di <em>token</em> da riportare</li>
-<li>soglia di similarità tra sorgenti ([0, 1])</li>
-<li>soglia di filtraggio dei sorgenti ([0, 1])</li>
+<li>lunghezza minima della sequenza di <em>token</em> da riportare (<code>min-tokens</code>)</li>
+<li>soglia di similarità tra sorgenti (<code>min-duplication</code> $\in [0, 1]$)</li>
+<li>soglia di filtraggio dei sorgenti (<code>threshold-filter</code> $\in [0, 1]$)</li>
 <li>esclusione di file ritenuti non rilevanti/comune utilizzo (e.g. <code>Pair.java</code>)</li>
 </ul>
 </li>
@@ -373,6 +402,53 @@
 </div>
 <h3 id="analisi-di-sensibilità">Analisi di sensibilità</h3>
 <p>Stime di similarità fuorvianti in corrispondenza di <code>getter</code>/<code>setter</code> e in corrispondenza di numerose costanti.</p>
+</section><section>
+<p>togliendo le costanti enum, l&rsquo;ultimo falso positivo cala drasticamente la similarità</p>
+</section><section>
+<h2 id="confronto-con-compare50">Confronto con <code>compare50</code></h2>
+<div class="smaller">
+<p><a href="https://github.com/cs50/compare50">progetto GitHub</a> | <a href="https://cs50.readthedocs.io/projects/compare50/en/latest/index.html">documentazione</a></p>
+</div>
+<ul>
+<li>Harvard, 2018</li>
+<li>implementa 5 tipi di confronto:
+<ul>
+<li>😊 <strong>strutturale</strong> (default <code>ON</code>): tokenizzazione + <a href="https://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf">Winnowing</a></li>
+<li>😑 <strong>testuale</strong> (default <code>ON</code>): rimozione degli spazi + Winnowing</li>
+<li>😑 <strong>letterale</strong> (default <code>ON</code>): Winnowing</li>
+<li>😑 <em>senza commenti</em> (default <code>OFF</code>): rimuove i commenti (ma tiene gli spazi) + Winnowing</li>
+<li>😯😑 <em>&ldquo;misspellings&rdquo;</em> (default <code>OFF</code>): confronta i commenti per parole inglesi con errori di ortografia identici.</li>
+</ul>
+</li>
+</ul>
+</section><section>
+<table>
+<thead>
+<tr>
+<th><em>PRO</em></th>
+<th><em><strong>CONTRO</strong></em></th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>riesce a confrontare un numero molto elevato di progetti in breve tempo (entro l&rsquo;ora)</td>
+<td>i <em>report</em> non sono ordinati per sorgente più simile</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>sono considerati le dichiarazioni di <code>import</code>, <code>package</code></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
 </section><section>
 <h2 id="sviluppi-futuri">Sviluppi futuri</h2>
 <ul>
