@@ -4,26 +4,12 @@ description = "TODO"
 outputs = ["Reveal"]
 +++
 
-<section data-noprocess>
-    <h4 style="color:black">Alma Mater Studiorum $\cdot$ Università di Bologna</h4>
-    <h6 style="font-size:0.8em; color:black;">Campus di Cesena</h6>
-    <hr/>
-    <p style="font-size:0.8em;">Dipartimento di informatica $-$ Scienza e Ingegneria</p>
-    <p style="font-size:0.8em;">Corso di Laurea in Ingegneria e Scienze Informatiche</p>
-    <h2 style="margin:1em 0"><a href="https://github.com/tassiLuca/bachelor-thesis/releases/latest" style="color:#3457D5">Progettazione e sviluppo di uno strumento per la scansione di progetti software alla ricerca di potenziali segni di plagio</a></h2>
-    <p style="font-size:0.8em; margin-bottom:0">Elaborato in</p>
-    <h6 style="color:black">PROGRAMMAZIONE A OGGETTI</h6>
-    <div style="margin-top:1em;">
-        <div style="width:50%; border-box:none; float: left">
-            <p style="font-size:0.7em">Relatore</p>
-            <p style="font-size:0.8em">Prof. Danilo Pianini</p>
-        </div>
-        <div style="width:50%; border-box:none; float: right">
-            <p style="font-size:0.7em;">Presentata da:</p>
-            <p style="font-size:0.8em;">Luca Tassinari</p>
-        </div>
-    </div>
-</section>
+# Code Plagiarism Detector
+## [Tool per la scansione di progetti software alla ricerca di potenziali segni di plagio](https://github.com/DanySK/code-plagiarism-detector)
+
+<hr/>
+
+Tassinari Luca
 
 ---
 
@@ -216,19 +202,48 @@ Similarità coseno
 
 ## Similarità tra coppie di sorgenti
 
-$$
-\text{max_sim_s} = \frac{\sum_{match \in tiles} length}{min(|A|,|B|)}
-$$
+Data una coppia di sorgenti $A$ e $B$:
 
-❌ se i sorgenti confrontati hanno dimensione (in numero di token) molto diversa la stima è fuorviante
-
-<div style="border: 2px dashed crimson">
+<div style="margin: 5% 0;">
 
 $$
-\text{avg_sim_s} = \frac{2 \cdot \sum_{match \in tiles} length}{|A|+|B|}
+\text{max_sim_s}(A, B) = \frac{\sum_{match \in tiles} length}{min(|A|,|B|)}
 $$
 
-❌ se i sorgenti sono molti grandi (in numero di token) molto diversa la stima è fuorviante
+</div>
+
+⚠️ 
+
+$|A|=30, B=150, \sum_{match \in tiles} length = 30$
+
+$\Rightarrow \text{max_sim_s(A,B)}=1$
+
+---
+
+Data una coppia di sorgenti $A$ e $B$:
+
+<div style="border: 2px dashed forestgreen; margin: 3% 0;">
+
+$$
+\text{avg_sim_s}(A, B) = \frac{2 \cdot \sum_{match \in tiles} length}{|A|+|B|}
+$$
+
+</div>
+
+<div class="smaller">
+
+✅ $|A|=30, B=150, \sum_{match \in tiles} length = 30 \Rightarrow \text{avg_sim_s(A,B)}=0.33$
+
+$\hspace{1cm}$
+
+{{% fragment %}}
+
+⚠️ 
+
+$|A|=|B|=30, \sum_{match \in tiles} length = 25 \Rightarrow \text{avg_sim_s(A,B)}=0.83$
+$|A|=|B|=1000, \sum_{match \in tiles} length = 400 \Rightarrow \text{avg_sim_s(A,B)}=0.4$
+
+{{% /fragment %}}
 
 </div>
 
@@ -382,7 +397,7 @@ togliendo le costanti enum, l'ultimo falso positivo cala drasticamente la simila
 
 ---
 
-## Confronto con `compare50`
+## `compare50`
 
 <div class="smaller">
 
@@ -400,10 +415,29 @@ togliendo le costanti enum, l'ultimo falso positivo cala drasticamente la simila
 
 ---
 
-| _PRO_  |  _**CONTRO**_ |
-|---|---|---|---|---|
-|riesce a confrontare un numero molto elevato di progetti in breve tempo (entro l'ora)|i _report_ non sono ordinati per sorgente più simile|
-||sono considerati le dichiarazioni di `import`, `package`|
+## `compare50` vs ns. tool
+
+<div class="smaller" style="margin:0 -10%">
+
+| _Progetto originale_ | _Progetto copiato_ | _Similarità_ | _`compare50` structure_ | _`compare50` text_ | _`compare50` exact_ | _`compare50` nocomments_ | _`compare50` misspellings_ | 
+|:--------------------:|:------------------:|:------------:|:-----------------------:|:------------------:|:-------------------:|:------------------------:|:--------------------------:|
+| 9b7266               | 80fd2e             | 100\%        | 89\%                    | 73\%               | 74\%                | 77\%                     | 90\%                       |  
+| f0caf3               | c1e451             | 89\%         | 88\%                    | 20\%               | 12\%                | 29\%                     | 49\%                       |
+| ac8a48               | 7d79ff             | 81\%         | 66\%                    | 14\%               | 15\%                | 16\%                     | 73\%                       |
+| 7bc0ee               | 2308d9             | 69\%         | 72\%                    | 9\%                | 14\%                | 11\%                     | 41\%                       |
+| a5c39e               | 2ed153             | 56\%         | 46\%                    | 7\%                | 12\%                | 9\%                      | 58\%                       |
+| 005bc2               | f67c20             | 55\%         | |
+| 501b0f               | c01302             | 49\%         | |
+| 8f5d5a               | afcd72             | 48\%         | |
+
+</div>
+
+---
+
+|                                  _ASPETTI POSITIVI_                                  |                  _**ASPETTI NEGATIVI**_                 |
+|:------------------------------------------------------------------------------------:|:-------------------------------------------------------:|
+|riesce a confrontare un numero molto elevato di progetti in breve tempo               |i _report_ non sono ordinati per sorgente più simile     |
+|                                                                                      |sono considerati le dichiarazioni di `import`, `package` |
 
 ---
 
