@@ -214,7 +214,7 @@ $$
 
 ⚠️ 
 
-$|A|=30, B=150, \sum_{match \in tiles} length = 30$
+$|A|=30, |B|=150, \sum_{match \in tiles} length = 30$
 
 $\Rightarrow \text{max_sim_s(A,B)}=1$
 
@@ -232,7 +232,7 @@ $$
 
 <div class="smaller">
 
-✅ $|A|=30, B=150, \sum_{match \in tiles} length = 30 \Rightarrow \text{avg_sim_s(A,B)}=0.33$
+✅ $|A|=30, |B|=150, \sum_{match \in tiles} length = 30 \Rightarrow \text{avg_sim_s(A,B)}=0.33$
 
 $\hspace{1cm}$
 
@@ -241,7 +241,7 @@ $\hspace{1cm}$
 ⚠️ 
 
 $|A|=|B|=30, \sum_{match \in tiles} length = 25 \Rightarrow \text{avg_sim_s(A,B)}=0.83$
-$|A|=|B|=1000, \sum_{match \in tiles} length = 400 \Rightarrow \text{avg_sim_s(A,B)}=0.4$
+$|A|=|B|=1000, \sum_{match \in tiles} length = 400  \Rightarrow \text{avg_sim_s(A,B)}=0.4$
 
 {{% /fragment %}}
 
