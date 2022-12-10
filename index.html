@@ -25,26 +25,10 @@
       <div class="slides">
   
 
-    <section data-noprocess>
-    <h4 style="color:black">Alma Mater Studiorum $\cdot$ Università di Bologna</h4>
-    <h6 style="font-size:0.8em; color:black;">Campus di Cesena</h6>
-    <hr/>
-    <p style="font-size:0.8em;">Dipartimento di informatica $-$ Scienza e Ingegneria</p>
-    <p style="font-size:0.8em;">Corso di Laurea in Ingegneria e Scienze Informatiche</p>
-    <h2 style="margin:1em 0"><a href="https://github.com/tassiLuca/bachelor-thesis/releases/latest" style="color:#3457D5">Progettazione e sviluppo di uno strumento per la scansione di progetti software alla ricerca di potenziali segni di plagio</a></h2>
-    <p style="font-size:0.8em; margin-bottom:0">Elaborato in</p>
-    <h6 style="color:black">PROGRAMMAZIONE A OGGETTI</h6>
-    <div style="margin-top:1em;">
-        <div style="width:50%; border-box:none; float: left">
-            <p style="font-size:0.7em">Relatore</p>
-            <p style="font-size:0.8em">Prof. Danilo Pianini</p>
-        </div>
-        <div style="width:50%; border-box:none; float: right">
-            <p style="font-size:0.7em;">Presentata da:</p>
-            <p style="font-size:0.8em;">Luca Tassinari</p>
-        </div>
-    </div>
-</section>
+    <section><h1 id="code-plagiarism-detector">Code Plagiarism Detector</h1>
+<h2 id="tool-per-la-scansione-di-progetti-software-alla-ricerca-di-potenziali-segni-di-plagiohttpsgithubcomdanyskcode-plagiarism-detector"><a href="https://github.com/DanySK/code-plagiarism-detector">Tool per la scansione di progetti software alla ricerca di potenziali segni di plagio</a></h2>
+<hr/>
+<p>Tassinari Luca</p>
 </section><section>
 <h2 id="plagiarismo-e-antiplagiarismo-nel-software">Plagiarismo e antiplagiarismo nel software</h2>
 <ul>
@@ -214,15 +198,30 @@
 <h2 id="come-vengono-stimate-le-similarità">Come vengono stimate le similarità?</h2>
 </section><section>
 <h2 id="similarità-tra-coppie-di-sorgenti">Similarità tra coppie di sorgenti</h2>
+<p>Data una coppia di sorgenti $A$ e $B$:</p>
+<div style="margin: 5% 0;">
 <p>$$
-\text{max_sim_s} = \frac{\sum_{match \in tiles} length}{min(|A|,|B|)}
+\text{max_sim_s}(A, B) = \frac{\sum_{match \in tiles} length}{min(|A|,|B|)}
 $$</p>
-<p>❌ se i sorgenti confrontati hanno dimensione (in numero di token) molto diversa la stima è fuorviante</p>
-<div style="border: 2px dashed crimson">
+</div>
+<p>⚠️</p>
+<p>$|A|=30, B=150, \sum_{match \in tiles} length = 30$</p>
+<p>$\Rightarrow \text{max_sim_s(A,B)}=1$</p>
+</section><section>
+<p>Data una coppia di sorgenti $A$ e $B$:</p>
+<div style="border: 2px dashed forestgreen; margin: 3% 0;">
 <p>$$
-\text{avg_sim_s} = \frac{2 \cdot \sum_{match \in tiles} length}{|A|+|B|}
+\text{avg_sim_s}(A, B) = \frac{2 \cdot \sum_{match \in tiles} length}{|A|+|B|}
 $$</p>
-<p>❌ se i sorgenti sono molti grandi (in numero di token) molto diversa la stima è fuorviante</p>
+</div>
+<div class="smaller">
+<p>✅ $|A|=30, B=150, \sum_{match \in tiles} length = 30 \Rightarrow \text{avg_sim_s(A,B)}=0.33$</p>
+<p>$\hspace{1cm}$</p>
+<span class='fragment ' >
+  <p>⚠️</p>
+<p>$|A|=|B|=30, \sum_{match \in tiles} length = 25 \Rightarrow \text{avg_sim_s(A,B)}=0.83$
+$|A|=|B|=1000, \sum_{match \in tiles} length = 400 \Rightarrow \text{avg_sim_s(A,B)}=0.4$</p>
+</span>
 </div>
 </section><section>
 <h2 id="similarità-tra-coppie-di-progetti">Similarità tra coppie di progetti</h2>
@@ -405,7 +404,7 @@ $$</p>
 </section><section>
 <p>togliendo le costanti enum, l&rsquo;ultimo falso positivo cala drasticamente la similarità</p>
 </section><section>
-<h2 id="confronto-con-compare50">Confronto con <code>compare50</code></h2>
+<h2 id="compare50"><code>compare50</code></h2>
 <div class="smaller">
 <p><a href="https://github.com/cs50/compare50">progetto GitHub</a> | <a href="https://cs50.readthedocs.io/projects/compare50/en/latest/index.html">documentazione</a></p>
 </div>
@@ -422,30 +421,121 @@ $$</p>
 </li>
 </ul>
 </section><section>
+<h2 id="compare50-vs-ns-tool"><code>compare50</code> vs ns. tool</h2>
+<div class="smaller" style="margin:0 -10%">
 <table>
 <thead>
 <tr>
-<th><em>PRO</em></th>
-<th><em><strong>CONTRO</strong></em></th>
-<th></th>
-<th></th>
-<th></th>
+<th style="text-align:center"><em>Progetto originale</em></th>
+<th style="text-align:center"><em>Progetto copiato</em></th>
+<th style="text-align:center"><em>Similarità</em></th>
+<th style="text-align:center"><em><code>compare50</code> structure</em></th>
+<th style="text-align:center"><em><code>compare50</code> text</em></th>
+<th style="text-align:center"><em><code>compare50</code> exact</em></th>
+<th style="text-align:center"><em><code>compare50</code> nocomments</em></th>
+<th style="text-align:center"><em><code>compare50</code> misspellings</em></th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>riesce a confrontare un numero molto elevato di progetti in breve tempo (entro l&rsquo;ora)</td>
-<td>i <em>report</em> non sono ordinati per sorgente più simile</td>
+<td style="text-align:center">9b7266</td>
+<td style="text-align:center">80fd2e</td>
+<td style="text-align:center">100%</td>
+<td style="text-align:center">89%</td>
+<td style="text-align:center">73%</td>
+<td style="text-align:center">74%</td>
+<td style="text-align:center">77%</td>
+<td style="text-align:center">90%</td>
+</tr>
+<tr>
+<td style="text-align:center">f0caf3</td>
+<td style="text-align:center">c1e451</td>
+<td style="text-align:center">89%</td>
+<td style="text-align:center">88%</td>
+<td style="text-align:center">20%</td>
+<td style="text-align:center">12%</td>
+<td style="text-align:center">29%</td>
+<td style="text-align:center">49%</td>
+</tr>
+<tr>
+<td style="text-align:center">ac8a48</td>
+<td style="text-align:center">7d79ff</td>
+<td style="text-align:center">81%</td>
+<td style="text-align:center">66%</td>
+<td style="text-align:center">14%</td>
+<td style="text-align:center">15%</td>
+<td style="text-align:center">16%</td>
+<td style="text-align:center">73%</td>
+</tr>
+<tr>
+<td style="text-align:center">7bc0ee</td>
+<td style="text-align:center">2308d9</td>
+<td style="text-align:center">69%</td>
+<td style="text-align:center">72%</td>
+<td style="text-align:center">9%</td>
+<td style="text-align:center">14%</td>
+<td style="text-align:center">11%</td>
+<td style="text-align:center">41%</td>
+</tr>
+<tr>
+<td style="text-align:center">a5c39e</td>
+<td style="text-align:center">2ed153</td>
+<td style="text-align:center">56%</td>
+<td style="text-align:center">46%</td>
+<td style="text-align:center">7%</td>
+<td style="text-align:center">12%</td>
+<td style="text-align:center">9%</td>
+<td style="text-align:center">58%</td>
+</tr>
+<tr>
+<td style="text-align:center">005bc2</td>
+<td style="text-align:center">f67c20</td>
+<td style="text-align:center">55%</td>
+<td style="text-align:center"></td>
+<td></td>
 <td></td>
 <td></td>
 <td></td>
 </tr>
 <tr>
+<td style="text-align:center">501b0f</td>
+<td style="text-align:center">c01302</td>
+<td style="text-align:center">49%</td>
+<td style="text-align:center"></td>
 <td></td>
-<td>sono considerati le dichiarazioni di <code>import</code>, <code>package</code></td>
 <td></td>
 <td></td>
 <td></td>
+</tr>
+<tr>
+<td style="text-align:center">8f5d5a</td>
+<td style="text-align:center">afcd72</td>
+<td style="text-align:center">48%</td>
+<td style="text-align:center"></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section><section>
+<table>
+<thead>
+<tr>
+<th style="text-align:center"><em>ASPETTI POSITIVI</em></th>
+<th style="text-align:center"><em><strong>ASPETTI NEGATIVI</strong></em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">riesce a confrontare un numero molto elevato di progetti in breve tempo</td>
+<td style="text-align:center">i <em>report</em> non sono ordinati per sorgente più simile</td>
+</tr>
+<tr>
+<td style="text-align:center"></td>
+<td style="text-align:center">sono considerati le dichiarazioni di <code>import</code>, <code>package</code></td>
 </tr>
 </tbody>
 </table>
