@@ -471,7 +471,7 @@ Stime di similarità fuorvianti in corrispondenza di `getter`/`setter`.
 ---
 
 <video height="650px" style="margin: 0 -200px; max-width:revert;" controls autoplay muted loop>
-    <source src="./bad-imports.mp4" type="video/mp4">
+    <source src="./compare50-bad-imports.mp4" type="video/mp4">
     Your browser does not support the video tag.
 </video>    
 
