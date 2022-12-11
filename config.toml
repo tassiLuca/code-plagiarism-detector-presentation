@@ -1,4 +1,4 @@
-baseURL = "https://tassiLuca.github.io/thesis-presentation"
+baseURL = "https://tassiLuca.github.io/code-plagiarism-detector-presentation"
 languageCode = "en-us"
 title = "Thesis Presentation"
 disableKinds = ["sitemap", "RSS"]
