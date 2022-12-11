@@ -1,7 +1,7 @@
 {
 	"version": 3,
 	"file": "custom-theme.css",
-	"sourceRoot": "/home/runner/work/thesis-presentation/thesis-presentation",
+	"sourceRoot": "/home/runner/work/code-plagiarism-detector-presentation/code-plagiarism-detector-presentation",
 	"sources": [
 		"assets/custom-theme.scss",
 		"themes/reveal-hugo/assets/reveal-js/dist/theme/template/mixins.scss",
