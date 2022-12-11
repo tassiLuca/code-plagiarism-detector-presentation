@@ -181,10 +181,8 @@ flowchart TB
   - chiavi: tipi di token
   - valore: frequenza (numero di occorrenze all'interno del sorgente)
 - **similarità coseno**
-
----
-
-Similarità coseno
+  - tutte le coppie di rappresentazioni la cui similarità è inferiore a un valore di soglia sono escluse: 
+  $threshold = sim_{min} + \text{init\_threshold} \cdot (sim_{max} - sim_{min})$
 
 ---
 
@@ -262,6 +260,10 @@ $$
 $$
 
 dove $P_{75}$ è il 75° percentile (o 3° quartile) delle similarità dei sorgenti segnalati.
+
+---
+
+<img src="./weight-function-project-sim.png" alt="Funzione di peso della similarità tra progetti" style="width: 80%" />
 
 ---
 
