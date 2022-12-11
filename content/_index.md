@@ -191,7 +191,7 @@ Similarità coseno
 ### Fase 3: Detection
 - È applicato un algoritmo di _string matching_ ([RKR-GST, 1993](https://www.researchgate.net/profile/Michael_Wise/publication/262763983_String_Similarity_via_Greedy_String_Tiling_and_Running_Karp-Rabin_Matching/links/59f03226aca272a2500141f4/String-Similarity-via-Greedy-String-Tiling-and-Running-Karp-Rabin-Matching.pdf)), riadattato per funzionare su sequenze di token 
 -  ⚠️ fase più onerosa computazionalmente $\Rightarrow$ **esecuzione parallela**
-   -  complessità che, nel caso pessimo, $O(n^2)$
+   -  RKR-GST ha complessità, nel caso pessimo, $O(n^2)$
 
 ---
 
@@ -389,11 +389,7 @@ Compared with 354 repositories.
 </div>
 
 ### Analisi di sensibilità
-Stime di similarità fuorvianti in corrispondenza di `getter`/`setter` e in corrispondenza di numerose costanti.
-
----
-
-togliendo le costanti enum, l'ultimo falso positivo cala drasticamente la similarità
+Stime di similarità fuorvianti in corrispondenza di `getter`/`setter`.
 
 ---
 
@@ -407,11 +403,11 @@ togliendo le costanti enum, l'ultimo falso positivo cala drasticamente la simila
 
 - Harvard, 2018
 - implementa 5 tipi di confronto:
-  - 😊 **strutturale** (default `ON`): tokenizzazione + [Winnowing](https://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf)
-  - 😑 **testuale** (default `ON`): rimozione degli spazi + Winnowing
-  - 😑 **letterale** (default `ON`): Winnowing
-  - 😑 _senza commenti_ (default `OFF`): rimuove i commenti (ma tiene gli spazi) + Winnowing
-  - 😯😑 _"misspellings"_ (default `OFF`): confronta i commenti per parole inglesi con errori di ortografia identici.
+  - **strutturale** (default `ON`): tokenizzazione + [Winnowing](https://theory.stanford.edu/~aiken/publications/papers/sigmod03.pdf)
+  - **testuale** (default `ON`): rimozione degli spazi + Winnowing
+  - **letterale** (default `ON`): Winnowing
+  - _senza commenti_ (default `OFF`): rimuove i commenti (ma tiene gli spazi) + Winnowing
+  - 😯 _"misspellings"_ (default `OFF`): confronta i commenti per parole inglesi con errori di ortografia identici.
 
 ---
 
@@ -426,28 +422,51 @@ togliendo le costanti enum, l'ultimo falso positivo cala drasticamente la simila
 | ac8a48               | 7d79ff             | 81\%         | 66\%                    | 14\%               | 15\%                | 16\%                     | 73\%                       |
 | 7bc0ee               | 2308d9             | 69\%         | 72\%                    | 9\%                | 14\%                | 11\%                     | 41\%                       |
 | a5c39e               | 2ed153             | 56\%         | 46\%                    | 7\%                | 12\%                | 9\%                      | 58\%                       |
-| 005bc2               | f67c20             | 55\%         | |
-| 501b0f               | c01302             | 49\%         | |
-| 8f5d5a               | afcd72             | 48\%         | |
+| 005bc2               | f67c20             | 55\%         | 44\%                    | 4\%                | 10\%                | 6\%                      | 39\%                       |
+|                      |                    |              | 😊                      | 😑                 | 😑                   | 😑                       | 😑                         |
+
+- N.B.: il confronto _misspellings_ non è significativo: la `javadoc` è piena di errori grammaticali (`@param`, `@link`, ...)
 
 </div>
 
 ---
 
-|                                  _ASPETTI POSITIVI_                                  |                  _**ASPETTI NEGATIVI**_                 |
-|:------------------------------------------------------------------------------------:|:-------------------------------------------------------:|
-|riesce a confrontare un numero molto elevato di progetti in breve tempo               |i _report_ non sono ordinati per sorgente più simile     |
-|                                                                                      |sono considerati le dichiarazioni di `import`, `package` |
+<div class="container">
+<div class="col" style="width:50%">
+
+ _ASPETTI POSITIVI_
+
+- riesce a confrontare un numero molto elevato di progetti in breve tempo (meno di 1 ora)
+  - il nostro tool effettua 1-354 comparazioni in circa 15 minuti
+{{% fragment %}}
+- nel report finale è riportato un grafo che mostra _cluster_ di progetti simili
+{{% /fragment %}}
+
+
+</div>
+<div class="col" style="width:50%">
+
+{{% fragment %}}
+![grafo cluster di progetti simili](graph-sim-compare50.png)
+{{% /fragment %}}
+
+</div>
+
+---
+
+**ASPETTI NEGATIVI**
+- i _report_ non sono ordinati per sorgente più simile
+- non è configurabile nella soglia di _token_ da riportare
+- sono considerati dichiarazioni irrilevanti che appesantiscono inutilmente i report
+  -  `import`, `package` 
 
 ---
 
 ## Sviluppi futuri
-- a "stretto giro":
-  - tarare le metriche per stimare la similarità
-- di "lungo respiro":
-  - aggiungere un'interfaccia grafica
-  - generare report, ad esempio HTML, con una formattazione migliorata tipica di un IDE.
-  - aggiungere tecniche di _clustering_ a seguito della comparazione dei sorgenti per individuare con maggior precisione addensamenti di sorgenti duplicati
+
+- tarare metriche di similarità
+  - idea: eliminare la prima metrica di similarità e stimare la similarità tra progetti in base al numero di token riportati sul totale, pesando la "grandezza" del file (in numero token o righe)
+- per ridurre il tempo d'esecuzione introdurre tecniche di filtraggio più efficaci della semplice similarità coseno
 
 ---
 
