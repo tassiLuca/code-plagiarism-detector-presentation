@@ -179,10 +179,13 @@
 <li>valore: frequenza (numero di occorrenze all&rsquo;interno del sorgente)</li>
 </ul>
 </li>
-<li><strong>similarità coseno</strong></li>
+<li><strong>similarità coseno</strong>
+<ul>
+<li>tutte le coppie di rappresentazioni la cui similarità è inferiore a un valore di soglia sono escluse:
+$threshold = sim_{min} + \text{init_threshold} \cdot (sim_{max} - sim_{min})$</li>
 </ul>
-</section><section>
-<p>Similarità coseno</p>
+</li>
+</ul>
 </section><section>
 <h3 id="fase-3-detection">Fase 3: Detection</h3>
 <ul>
@@ -233,6 +236,8 @@ $$</p>
 \cdot P_{75}(\text{similarity of reported sources})
 $$</p>
 <p>dove $P_{75}$ è il 75° percentile (o 3° quartile) delle similarità dei sorgenti segnalati.</p>
+</section><section>
+<img src="./weight-function-project-sim.png" alt="Funzione di peso della similarità tra progetti" style="width: 80%" />
 </section><section>
 <h1 id="il-tool-sviluppato">Il tool sviluppato</h1>
 <ul>
