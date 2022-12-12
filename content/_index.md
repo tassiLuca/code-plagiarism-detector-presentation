@@ -398,7 +398,7 @@ Stime di similarità fuorvianti in corrispondenza di `getter`/`setter`.
 ## Sviluppi futuri
 
 - tarare metriche di similarità
-  - _idea_: eliminare la prima metrica di similarità e stimare la similarità tra progetti in base al numero di token riportati sul totale, pesando la "grandezza" del file (in numero token o righe)
+  - _idea_: stimare la similarità pesando la "grandezza" del file (in numero token o righe)
 - per ridurre il tempo d'esecuzione introdurre tecniche di filtraggio più efficaci della semplice similarità coseno
 
 ---
